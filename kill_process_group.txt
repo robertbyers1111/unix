@@ -1,0 +1,4 @@
+To kill ALL processes in a single group:
+
+	1. Find PGID using "ps -efj"
+	2. Kill the PGID, using NEGATIVE number

@@ -1,0 +1,9 @@
+
+[A] Trick: use -V for a 'version' sort (!)
+
+   waterips.sh | sort -V       (UPPERCASE 'V')
+
+[B] older method..
+
+   /opt/sfw/bin/sort -t . -n +0 -1 +1 -2 +2 -3 +3 -4
+

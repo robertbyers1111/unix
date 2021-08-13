@@ -1,0 +1,23 @@
+
+ping -v -i1 -t1 -w2 -W2 -c2 HostnameOrIPAddr
+
+# -c count
+# -i interval
+# -n numbers only (no name lookups)
+# -t ttl
+# -v verbose
+# -W timeout
+# -w deadline
+
+-w deadline
+Specify a timeout, in seconds, before ping exits regardless of
+how many packets have been sent or received. In this case ping
+does not stop after count packet are sent, it waits either for
+deadline expire or until count probes are answered or for some
+error notification from network.
+
+-W timeout
+Time to wait for a response, in seconds. The option affects only
+timeout in absence of any responses, otherwise ping waits for
+two RTTs.
+

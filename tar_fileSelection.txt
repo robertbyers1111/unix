@@ -1,0 +1,14 @@
+
+[A] To read a list of filenames from stdin, there are two requirements:
+
+  1. Must use xargs (so tar interprets each space-delimited filename separately)
+  2. Specify '-T-' as the tar source
+
+  EXAMPLE:
+
+   echo abc def | xargs tar cvf xTARx -T-
+
+[B] To pipe output of find to tar:
+
+   find . -mtime -145 -type f | tar cvf xTARx -T-
+

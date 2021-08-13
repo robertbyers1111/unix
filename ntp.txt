@@ -1,0 +1,127 @@
+#-------------------------------------------------------------------------------
+SOLARIS
+
+   DAEMON STARTUP:	/etc/rc2.d/S74xntpd start
+   CONFIG FILE:		/etc/inet/ntp.conf
+
+#-------------------------------------------------------------------------------
+LINUX
+
+   DAEMON STARTUP:	/etc/init.d/ntpd start
+   CONFIG FILE:		/etc/ntp.conf
+
+#   +---------------------+
+#---| Linux client config |-----------------------------------------------------
+#   +---------------------+
+
+driftfile /var/lib/ntp/drift
+pidfile /var/run/ntpd.pid
+logconfig =all
+
+restrict -4 default kod notrap nomodify nopeer
+restrict -6 default kod notrap nomodify nopeer
+
+restrict -4 127.0.0.1 nomodify
+restrict -6 ::1 nomodify
+
+server 10.2.0.25 iburst dynamic
+
+#   +-----------------------+
+#---| Solaris client config |---------------------------------------------------
+#   +-----------------------+
+
+% cat /etc/inet/ntp.conf
+
+# @(#)ntp.client	1.2	96/11/06 SMI
+#
+# /etc/inet/ntp.client
+#
+# An example file that could be copied over to /etc/inet/ntp.conf; it
+# provides a configuration for a host that passively waits for a server
+# to provide NTP packets on the ntp multicast net.
+#
+
+server walrus prefer
+
+broadcast 224.0.1.1 ttl 4
+enable auth monitor
+driftfile /var/ntp/ntp.drift
+statsdir /var/ntp/ntpstats/
+filegen peerstats file peerstats type day enable
+filegen loopstats file loopstats type day enable
+filegen clockstats file clockstats type day enable
+
+keys /etc/inet/ntp.keys
+trustedkey 0
+requestkey 0
+controlkey 0
+
+#-------------------------------------------------------------------------------
+SOLARIS SERVER CONFIG:
+
+% cat /etc/inet/ntp.conf
+
+server tick.mit.edu prefer
+server ntp.colby.edu
+
+broadcast 224.0.1.1 ttl 4
+enable auth monitor
+driftfile /var/ntp/ntp.drift
+statsdir /var/ntp/ntpstats/
+filegen peerstats file peerstats type day enable
+filegen loopstats file loopstats type day enable
+filegen clockstats file clockstats type day enable
+
+
+
+#   +----------------------------+
+#---| Tidbits from Jeff Domogala |---------------------------------------------
+#   +----------------------------+
+
+I just want to share some notes about Oracle VM guest time
+synchronization...
+
+With OL6/OL7/Centos 6/7 and other paravirtualized kernel variants of
+Linux,  Oracle VM does not provide any kind of time synchronization for
+the guest beyond the initial hardware clock sync when the guest is
+started.  If time synchronization is important, you need to run NTP on
+the guest.  The server that is available for use is ap-yummy, which is
+at 10.138.221.160 and 10.196.1.160.  Yummy is synchronized to the Oracle
+mothership.  Note that certain services will fail after a clock skew of
+5 minutes has been exceeded between the server and client.
+
+Next, there is an interesting "feature" of NTP, where it will silently
+exit if a clock offset >1000 seconds occurs.  It does not log anything
+when this happens.  I also observed that there can be a significant jump
+in time when live migrating VMs from one server to another.  In order to
+avoid NTP folding under such a situation, it is recommended that the
+config option "tinker panic 0" be placed in the first line of the NTP
+config file.  This line must be the first option NTP reads from the
+file.  This allows NTP to cope with the drastic change and eventually
+step back into proper time.
+
+It is also important NOT to allow the local hardware clock to server as
+an undisciplined clock source.  If you find the lines
+
+server 127.127.1.0
+fudge  127.127.1.0 stratum 10
+
+in your NTP config, comment them out or remove them.  This is because
+NTP will try to use the undisciplined clock the preferred source if
+clock skew is real bad.  For VMs, that clock is not reliable.
+
+If there are any questions, please ask.
+
+--Jeff
+
+#   +-------------------------------------+
+#---| Forcing clock to sync with a server |-------------------------------------
+#   +-------------------------------------+
+
+% service ntpd stop
+% ntpd -gq
+% service ntpd start
+
+The -gq tells the ntp daemon to correct the time regardless of the offset
+(g) and exit immediately (q).
+

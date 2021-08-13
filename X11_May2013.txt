@@ -1,0 +1,105 @@
+
+Hi Jeff,
+
+I used to use both PuTTY (for telnet to linux hosts in the lab) and the Cygwin X Server (to allow X applications on my desktop display in my cube).
+
+PuTTY still works for me, but I.m no longer able to launch any X applications from lab linux systems using my desktop.s display. After about a minute or two, I get .Error: cannot open display: 10.1.16.51:0.0.
+
+10.1.16.51 is my cubicle desktop. As before, I have Cygwin X Server up and running, with .xhost +. in my .startxwinrc file. This used to work fine.
+
+From PuTTY, I.ve enabled X11 forwarding. But I get above error every time. 
+
+Also, I tried ssh .Y user@host, and got the same error. In addition, when I log in using this method I get this warning during the login:
+
+      .Warning: No xauth data; using fake authentication data for X11 forwarding..
+
+.. is that a clue as to what.s missing?
+
+Thanks for any light you can shed on this!
+-Bob
+________________________________
+
+jdomogala@acmepacket.com 11:09 AM
+what is the linux machine? The DISPLAY is not correct...
+
+Bob Byers 11:09 AM
+I'm using whitewater (172.30.10.229)
+
+Jeff Domogala 11:09 AM
+and what is the username?
+
+Bob Byers 11:09 AM
+bbyers
+
+Jeff Domogala 11:10 AM
+yep... .bashrc is hosed
+standby... ill fix it
+try to open up a new session now
+if you "echo DISPLAY", it should say "whitewater:10.0"
+
+Bob Byers 11:24 AM
+but whitewater is not my desktop, it is the remote system to which I'm ssh'ing. I want to set the display to be my desktop PC (10.1.16.51)
+
+Jeff Domogala 11:24 AM
+yep
+with ssh the display is the ssh tunnel on whitewater
+
+Bob Byers 11:25 AM
+oh
+
+Jeff Domogala 11:25 AM
+you cannot telnet and expect to fire up x windows anymore
+you have to ssh -Y user@host
+then DISPLAY is set 
+
+Bob Byers 11:25 AM
+OK. 
+
+Jeff Domogala 11:25 AM
+I commented out the lines in your .bashrc that set DISPLAY
+
+Bob Byers 11:26 AM
+will the display variable always use ":10"?
+
+Jeff Domogala 11:26 AM
+first tunnel, yes
+second is 11, etc...
+
+Bob Byers 11:26 AM
+OK
+ssh -Y bbyers@172.30.10.229
+.. then ..
+export DISPLAY=whitewater:10.0
+.. now I get ..
+Error: Can't open display: whitewater:10.0
+
+Jeff Domogala 11:28 AM
+do not export
+if things are working right DISPLAY is set automatically
+if not, something is still screwed up
+ssh onto the machine and "echo DISPLAY"
+
+Bob Byers 11:29 AM
+OK that worked!
+it is set to "localhost:10.0"
+
+Jeff Domogala 11:30 AM
+ok
+that's fine
+some ssh servers use the hostname, others use localhost
+
+Bob Byers 11:30 AM
+I see
+
+Jeff Domogala 11:30 AM
+all set?
+
+Bob Byers 11:30 AM
+Thanks for the help!
+
+Jeff Domogala 11:30 AM
+no problem
+
+Bob Byers 11:30 AM
+yes all set
+

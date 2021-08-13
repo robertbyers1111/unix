@@ -1,0 +1,107 @@
+
+standard output format specifiers for use with 'ps -o'
+
+%cpu       cpu utilization of the process in "##.#" format. Currently, it is the CPU time used divided by the time the process has been running
+%mem       ratio of the process’s resident set size  to the physical memory on the machine, expressed as a percentage. (alias pmem).
+args       command with all its arguments as a string. Modifications to the arguments may be shown. The output in this column may contain spaces.
+blocked    mask of the blocked signals, see signal(7). According to the width of the field, a 32-bit or 64-bit mask in hexadecimal format is
+bsdstart   time the command started. If the process was started less than 24 hours ago, the output format is " HH:MM", else it is "mmm dd" (where
+bsdtime    accumulated cpu time, user + system. The display format is usually "MMM:SS", but can be shifted to the right if the process used more
+c          processor utilization. Currently, this is the integer value of the percent usage over the lifetime of the process. (see %cpu).
+caught     mask of the caught signals, see signal(7). According to the width of the field, a 32 or 64 bits mask in hexadecimal format is displayed.
+cgroup     display control groups to which the process belonges.
+class      scheduling class of the process. (alias policy, cls). Fie
+cls        scheduling class of the process. (alias policy, class). Field’s possible values are:
+cmd        see args. (alias args, command).
+comm       command name (only the executable name). Modifications to the command name will not be shown. A process marked <defunct> is partly dead,
+command    see args. (alias args, cmd).
+cp         per-mill (tenths of a percent) CPU usage. (see %cpu).
+cputime    cumulative CPU time, "[dd-]hh:mm:ss" format. (alias time).
+egid       effective group ID number of the process as a decimal integer. (alias gid).
+egroup     effective group ID of the process. This will be the textual group ID, if it can be obtained and the field width permits, or a decimal
+eip        instruction pointer.
+esp        stack pointer.
+etime      elapsed time since the process was started, in the form [[dd-]hh:]mm:ss.
+euid       effective user ID. (alias uid).
+euser      effective user name. This will be the textual user ID, if it can be obtained and the field width permits, or a decimal representation
+f          flags associated with the process, see the PROCESS FLAGS section. (alias flag, flags).
+fgid       filesystem access group ID. (alias fsgid).
+fgroup     filesystem access group ID. This will be the textual user ID, if it can be obtained and the field width permits, or a decimal
+flag       see f. (alias f, flags).
+flags      see f. (alias f, flag).
+fname      first 8 bytes of the base name of the process’s executable file. The outp
+fuid       filesystem access user ID. (alias fsuid).
+fuser      filesystem access user ID. This will be the textual user ID, if it can be obtained and the field width permits, or a decimal
+gid        see egid. (alias egid).
+group      see egroup. (alias egroup).
+ignored    mask of the ignored signals, see signal(7). According to the width of the field, a 32-bit or 64-bit mask in hexadecimal format is
+label      security label, most commonly used for SE Linux context data. This is for the Mandatory Access Control ("MAC") found on high-security
+lstart     time the command started. See also bsdstart, start, start_time, and stime.
+lwp        lwp (light weight process, or thread) ID of the lwp being reported. (alias spid, tid).
+ni         nice value. This ranges from 19 (nicest) to -20 (not nice to others), see nice(1). (alias nice).
+nice       see ni. (alias ni).
+nlwp       number of lwps (threads) in the process. (alias thcount).
+nwchan     address of the kernel function where the process is sleeping (use wchan if you want the kernel function name). Running tasks will display
+pcpu       see %cpu. (alias %cpu).
+pending    mask of the pending signals. See signal(7). Signals pending on the process are distinct from signals pending on individual threads. Use
+pgid       process group ID or, equivalently, the process ID of the process group leader. (alias pgrp).
+pgrp       see pgid. (alias pgid).
+pid        process ID number of the process.
+pmem       see %mem. (alias %mem).
+policy     scheduling class of the process. (alias class, cls). Possible values are:
+ppid       parent process ID.
+psr        processor that process is currently assigned to.
+rgid       real group ID.
+rgroup     real group name. This will be the textual group ID, if it ca
+rip        64-bit instruction pointer.
+rsp        64-bit stack pointer.
+rss        resident set size, the non-swapped physical memory that a task has used (in kiloBytes). (alias rssize, rsz).
+rssize     see rss. (alias rss, rsz).
+rsz        see rss. (alias rss, rssize).
+rtprio     realtime priority.
+ruid       real user ID.
+ruser      real user ID. This will be the textual user ID, if it can be obtained and the field width permits, or a decimal representation otherwise.
+s          minimal state display (one character). See section PROCESS STATE CODES for the different values. See also stat if you want additional
+sched      scheduling policy of the process. The policies SCHED_OTHER (SCHED_NORMAL), SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, and SCHED_IDLE
+sess       session ID or, equivalently, the process ID of the session leader. (alias session, sid).
+sgi_p      processor that the process is currently executing on. Displays "*" if the process is not currently running or runnable.
+sgid       saved group ID. (alias svgid).
+sgroup     saved group name. This will be the textual group ID, if it can be obtained and the field width permits, or a decimal representation
+sid        see sess. (alias sess, session).
+sig        see pending. (alias pending, sig_pend).
+sigcatch   see caught. (alias caught, sig_catch).
+sigignore  see ignored. (alias ignored, sig_ignore).
+sigmask    see blocked. (alias blocked, sig_block).
+size       approximate amount of swap space that would be required if the process were to dirty all writable pages and then be swapped out. This
+spid       see lwp. (alias lwp, tid).
+stackp     address of the bottom (start) of stack for the process.
+start      time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  mmm dd"
+start_time starting time or date of the process. Only the year will be displayed if the process was not started the same year ps was invoked,
+stat       multi-character process state. See section PROCESS STATE CODES for the different values meaning. See also s and state if you just want
+state      see s. (alias s).
+suid       saved user ID. (alias svuid).
+suser      saved user name. This will be the textual user ID, if it can be obtained and the field width permits, or a decimal representation
+svgid      see sgid. (alias sgid).
+svuid      see suid. (alias suid).
+sz         size in physical pages of the core image of the process. This includes text, data, and stack space. Device mappings are currently
+thcount    see nlwp. (alias nlwp). number of kernel threads owned by the process.
+tid        see lwp. (alias lwp).
+time       cumulative CPU time, "[dd-]hh:mm:ss" format. (alias cputime).
+tname      controlling tty (terminal). (alias tt, tty).
+tpgid      ID of the foreground process group on the tty (terminal) that the process is connected to, or -1 if the process is not connected to a
+tt         controlling tty (terminal). (alias tname, tty).
+tty        controlling tty (terminal). (alias tname, tt).
+ucmd       see comm. (alias comm, ucomm).
+ucomm      see comm. (alias comm, ucmd).
+uid        see euid. (alias euid).
+uname      see euser. (alias euser, user).
+user       see euser. (alias euser, uname).
+vsize      see vsz. (alias vsz).
+vsz        virtual memory size of the process in KiB (1024-byte units). Device mappings are currently excluded; this is subject to change.
+wchan      name of the kernel function in which the process is sleeping, a "-" if the process is running, or a "*" if the process is multi-threaded
+
+
+MPLE:
+
+ps --no-headers -opid,uid,cmd
+

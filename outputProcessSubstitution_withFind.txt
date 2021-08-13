@@ -1,0 +1,46 @@
+
+From http://stackoverflow.com/questions/762348/how-can-i-exclude-all-permission-denied-messages-from-find
+
+If your shell is bash or zsh, there's a solution that is robust
+while being reasonably simple, using only POSIX-compliant find
+features; while bash itself is not part of POSIX, most modern Unix
+platforms come with it, making this solution widely portable:
+
+
+
+
+{ find . > files_and_folders 2> >(grep -v 'Permission denied' >&2); }
+
+
+
+
+>(...) is a (rarely used) output process substitution that allows
+redirecting output (in this case, stderr output (2>)) to the stdin
+of the command inside >(...).
+
+bash and zsh support them, while ksh seems to only support the more
+common input process substitutions.
+
+grep -v 'Permission denied' filters out (-v) all lines (from the
+find command's stderr stream) that contain the phrase Permission
+denied and outputs the remaining lines to stderr (>&2).
+
+The enclosing { ...; }, a group command (a.k.a command grouping),
+ensures that the command as a whole doesn't return until the output
+from the grep command inside the process substitution has arrived.
+
+Without the { ...; }, grep's output may arrive after the find
+command has completed.
+
+This approach is:
+
+robust: grep is only applied to error messages (and not to a
+combination of file paths and error messages, potentially leading to
+false positives), and error messages other than permission-denied
+ones are passed through, to stderr.
+
+side-effect free: find's exit code is preserved: the inability to
+access at least one of the filesystem items encountered results in
+exit code 1 (although that won't tell you whether errors other than
+permission-denied ones occurred (too)).
+

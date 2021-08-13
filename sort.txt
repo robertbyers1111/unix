@@ -1,0 +1,82 @@
+#!/bin/sh
+echo ""
+
+#-- Some options:
+#--   -b ignore leading spaces
+#--   -d dictionary sort
+#--   -g 'generic' numeric sort (whatever that means)
+#--   -k key
+#--   -n numeric sort
+#--   -r reverse ordering
+
+#-- Default field separator (whitespace)
+
+cat <<EOF1 | sort -b -k3,4dr -k7,7n
+
+- Type2: Service Bundle (8)      ID: 54  A_XUI
+- Type3: Subnet Group (2)        ID: 5   SPR
+- Type1: Service Bundle (8)      ID: 6   HTTP
+- Type4: Service Bundle (8)      ID: 57  A_Picture Mail
+- Type5: Service Profile (4)     ID: 2   KSCYMA_Profile
+- Type2: Service Bundle (8)      ID: 56  A_Ecare Banner Ads
+- Type6: Service Bundle (8)      ID: 55  A_BDS
+- Type9: Service Bundle (8)      ID: 51  A_Ecare
+- Type8: Service Bundle (8)      ID: 49  A_Music Store
+- Type7: Service Bundle (8)      ID: 37  A_DNS
+EOF1
+
+#-- Non-default separator (IMPORTANT: enclose in '', eg, -t'X')
+
+cat <<EOF2 | sort -bt':' -k2,2dr -k3,3g
+
+- Type2: Service Bundle (8)      ID: 54  A_XUI
+- Type3: Subnet Group (2)        ID: 5   SPR
+- Type1: Service Bundle (8)      ID: 6   HTTP
+- Type4: Service Bundle (8)      ID: 57  A_Picture Mail
+- Type5: Service Profile (4)     ID: 2   KSCYMA_Profile
+- Type2: Service Bundle (8)      ID: 56  A_Ecare Banner Ads
+- Type6: Service Bundle (8)      ID: 55  A_BDS
+- Type9: Service Bundle (8)      ID: 51  A_Ecare
+- Type8: Service Bundle (8)      ID: 49  A_Music Store
+- Type7: Service Bundle (8)      ID: 37  A_DNS
+EOF2
+
+### EXAMPLES
+### 
+### /opt/sfw/bin/sort -k 1.6M -k 2n -k 3
+### 
+### 	-k 1.6M		Start at 6th char of field 1, treat it as a month
+### 	-k 2n		Start at field 2, treat as numeric
+### 	-k 3		Start at field 3, treat as dictionary
+### 
+### /opt/sfw/bin/sort -t 'X' -k 8,11M -k 12n,13M
+### 
+### 	-t 'X'		X is field separator
+### 	-k 8,11M:	start field 8, end field 11 (11 as months, 8,9,10 as dictionary)
+### 	-k 12n,13M:	start field 12 (as numeric), end field 13 (as months)
+### 
+### 
+### 
+### NOTE:
+### 
+### 	Fields and characters within fields are numbered STARTING with 1.
+
+#-----------------------------------------------------------------------------------------
+#
+# (Oct 2013) Sort on *SECOND FIELD*
+#
+# /bin/sort -k2 -n
+#
+# ('-k2' sorts on FIELD 2, not column 2)
+#
+# ('-t' for delimiter)
+
+cat <<EOF3 | /bin/sort -k2 -n
+  abc 456.1
+  de 123.2
+  kab  12.4
+  zzz  000000.000001
+  qwe    .5
+  xyz   2.3
+EOF3
+

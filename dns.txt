@@ -1,0 +1,17 @@
+# TO UPDATE DNS SERVER FOR ITE NETWORK
+
+1. telnet seaturtle
+
+2. vi /var/named/ite.ellacoya.com
+	a. Update entries
+	b. *UPDATE SERIAL ID* (near top of file, in SOA section)
+
+3. vi /var/named/10.1
+	a. Update entries (last two octets of IP Addr, in reverse order)
+	b. *UPDATE SERIAL ID* (near top of file, in SOA section)
+
+4.	/etc/rc.d/rc3.d/S55named stop/start, or..
+	find pid of process 'named' and do a 'kill 1 <pid>'
+
+5. Make sure all is OK (tail -50 /var/log/messages)
+

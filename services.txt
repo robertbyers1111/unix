@@ -1,0 +1,11 @@
+
+On Ubuntu Linux Mint I have *two* service control tools...
+
+    % /bin/systemctl --version
+    systemd 245 (245.4-4ubuntu3.3)
+
+    % /usr/sbin/service --version
+    service ver. 1.57
+
+..both support commands 'status' and 'restart'
+

@@ -1,0 +1,42 @@
+
+Usage: mktemp [OPTION]... [TEMPLATE]
+
+TEMPLATE must contain at least 3 consecutive 'X's in last component.
+
+If TEMPLATE is not specified, uses tmp.XXXXXXXXXX, and --tmpdir is implied.
+
+-d, --directory     create a directory, not a file
+
+-u, --dry-run       do not create anything; merely print a name (unsafe)
+
+-q, --quiet         suppress diagnostics about file/dir-creation failure
+
+    --suffix=SUFF   append SUFF to TEMPLATE.  SUFF must not contain slash.
+                    This option is implied if TEMPLATE does not end in X.
+
+    --tmpdir[=DIR]  interpret TEMPLATE relative to DIR.  If DIR is not
+                    specified, use $TMPDIR if set, else /tmp.  With
+                    this option, TEMPLATE must not be an absolute name.
+                    Unlike with -t, TEMPLATE may contain slashes, but
+                    mktemp creates only the final component
+
+-p DIR              use DIR as a prefix; implies -t [deprecated]
+
+-t                  interpret TEMPLATE as a single file name component,
+                    relative to a directory: $TMPDIR, if set; else the
+                    directory specified via -p; else /tmp [deprecated]
+
+#-----------------------------------------------------------------------
+
+EXAMPLES:
+
+  Inside a shell script..
+
+TMPFIL=`mktemp -u --tmpdir=/tmp -t $(basename $0)_${USER}_$(echo 10i16o$(date +%s%N)p|dc)XXXX.dat`
+
+  Outside of a shell script basename $0 fails, so use this..
+
+TMPFIL=`mktemp -u --tmpdir=/tmp -t OMGWTF_${USER}_$(echo 10i16o$(date +%s%N)p|dc)XXXX.dat`
+
+#-----------------------------------------------------------------------
+vi ~rbyers/public_html/unix/mktemp.txt

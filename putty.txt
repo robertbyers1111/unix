@@ -1,0 +1,39 @@
+
+#   +----------------------------------------+
+#---| TO GET 8-bit CHARS DISPLAYED CORRECTLY |---
+#   +----------------------------------------+
+
+    1. Change PuTTY setting for Window > Translation > Remote Character Set
+
+       Set Remote Character Set to 'UTF-8'
+       If that doesn't work try one of: CP866, ISO-8859-1, Win1252
+
+    2. This step is just as important. In your .bashrc add this:
+
+       export LANG=en_US.UTF-8
+
+#   +--------------------------+
+#---| To change putty settings |---
+#   +--------------------------+
+
+    o Login to a host w/ putty
+    o Right-click title bar, Select "New Session"
+    o Select the session to be modified, Click "Load"
+    o Apply desired configuration changes
+    o Return to "Sessions"
+    o Select session to be saved, Click on "Save"
+
+#   +----------------+
+#---| X11 forwarding |---
+#   +----------------+
+
+    o On Windows, start an X11 server
+
+    o Set PuTTY Configuration as follows..
+
+        o Connection > SSH > X11 > [x] X11 Forwarding (enabled)
+        o Connection > SSH > X11 > X Display location [localhost:0.0]
+
+    o That's all! Putty will take care of everything from there
+    o No need to worry about tunneling
+

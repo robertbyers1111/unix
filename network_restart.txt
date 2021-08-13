@@ -1,0 +1,21 @@
+
+[1] network manager service
+
+    % sudo service network-manager restart
+
+[2] systemd
+
+The service command is just a wrapper for this method (and also for init.d scripts and Upstart commands). The systemctl
+command is much more versatile than service. This is what I usually prefer.
+
+    % sudo systemctl restart NetworkManager.service
+
+[3] nmcli
+
+    % sudo nmcli networking off
+    % sudo nmcli networking on
+
+[4] ifup & ifdown
+
+    % sudo ifdown -a && sudo ifup -a
+

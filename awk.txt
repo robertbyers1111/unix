@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#   FS : Field separator
+#   NF : Number of fields
+#  $NF : Value of last field
+
+#-- BASIC EXAMPLE..
+
+    echo abc | \
+     awk '{print $0}'
+
+#-- Field separators (-F)..
+
+    echo abc:def:ghi:jklm:nop | \
+     awk -F: '{ print $2 }'
+
+#-- Multiple field separators (-F)..
+
+    echo abc.def:ghi.jklm:nop | \
+     awk -F"\.|:" {' print $2 '}
+
+#-- Whitespace..
+
+    ifconfig | grep inet.addr:172 | \
+     awk -F'\.|:| +' {'printf "%s\n",$7'}
+
+#-- Looping through matched fields..
+
+    ifconfig | grep inet.addr:172 | \
+     awk -F'\.|:| +' '{for (i=1;i<=NF;++i) printf "%s: %s\n",i,$i}'
+
+#-- Compute sum of the last field from all records..
+
+    zcat $logfile | awk -F, '{tot += \$NF} END{print tot}'
+
+#-- ESCAPING '.'
+
+#   I have found that I need to escape the '.' anywhere from 0 to 4 times. See also 
+#   http://stackoverflow.com/questions/25867060/awk-warning-escape-sequence-treated-as-plain
+#
+#   For example, on bos-lphls I only have to escape '.' once ('\.') but 
+#   on the lab systems I must escape three times ('\\\.')
+#
+#   Thankfully, the triple escape works on both systems
+
+    echo a:bb.ccc:dddd.eeeee:ffff.ggg:hh.i | awk -F"\\\.|:" '{for (i=1;i<=NF;++i) printf "%s: %s\n",i,$i}'
+
+#-- Dropping a field..
+
+    #(bummer here: remaining fields collapse multiple whitespace into one)
+    
+    /bin/ls -l --full-time -Sr /var/log/*log |awk '{print $0}'
+    /bin/ls -l --full-time -Sr /var/log/*log |awk '{$1=$2="";print $0}'
+    /bin/ls -l --full-time -Sr /var/log/*log |awk '{$2="";print $0}'
+
+exit
+#-------------------------------------------
+vi ~/public_html/unix/awk.txt
+#-------------------------------------------
+

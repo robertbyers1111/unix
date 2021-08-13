@@ -1,0 +1,8 @@
+
+# stackoverflow has MANY answers and potential solutions to how to get the pid of non-final processes in a pipeline. 
+
+# I found the simplest to be 'jobs -p'. Example:
+
+nohup top -bn2 -ubbyers | egrep . &
+jobs -p
+

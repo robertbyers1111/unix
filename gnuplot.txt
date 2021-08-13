@@ -1,0 +1,211 @@
+#   +---------------------------+
+#---| Multi series in one chart |---
+#   +---------------------------+
+
+# This example plots three series:
+#
+# 1) only points, no legend
+# 2) smooth line, legend set via title
+# 3) smooth line, legend set via title
+
+     plot "test.dat" using 1:2 notitle with points, \
+             "test.dat" using 1:2 smooth csplines \
+                                  title "spline" with lines,\
+             "test.dat" using 1:2 smooth bezier \
+                                  title "bezier" with lines
+
+#   +-----------+
+#---| linewidth |---
+#   +-----------+
+
+[A] This definitely works..
+
+    plot "data.dat" pointsize 0 lw 10 title "DisIzzaTest" with lines
+
+
+[B] Set only the plot lines. Set 'n' to number of series in your chart.
+    (this didn't work for me)
+
+    do for [i=1:n] {
+        set style line i linewidth 3
+    }
+
+[C] This also changes the border widths!
+
+    set terminal X linewidth 5
+
+#   +----------------------------+
+#---| BASH PROC TO PLOT ONE FILE |----------------------------------------------
+#   +----------------------------+
+#   +------+
+#---| plot |--------------------------------------------------------------------
+#   +------+
+#
+# Plots the data found in one file
+#
+# Args:
+#
+#   1) Name of file to process
+#   2) Title
+#   3) Legend
+#------------------------------------------------------------------------------
+
+plot ()
+{
+
+  echo ""
+  echo "     IN: plot"
+
+  NOW=`date +%y%m%d_%H%M%S_%N`
+
+  INPUTF=$1
+  TITLE=$2
+  LEGEND=$3
+
+  echo "          INPUTF: $INPUTF"
+  echo "           TITLE: $TITLE"
+  echo "          LEGEND: $LEGEND"
+
+  PLOTCMDS=.PLOTCMDS_$NOW.gnuplot
+
+  cat << ..EOF > $PLOTCMDS
+
+    set terminal jpeg
+    set output "${TITLE}_${LEGEND}.jpeg"
+
+    set title "$TITLE" font "Helvetica,18"
+    set title "$TITLE" font "Arial,18"
+    plot "$INPUTF" pointsize 0 title "$LEGEND" with lines
+
+..EOF
+
+  gnuplot -persist $PLOTCMDS
+
+}
+
+#   +-----------------------------+
+#---| BASH PROC TO PLOT TWO FILES |---------------------------------------------
+#   +-----------------------------+
+#   +-------+
+#---| plot2 |-------------------------------------------------------------------
+#   +-------+
+#
+# Plots the data found in two files on the same chart
+#
+# Set these vars in calling scope..
+#
+#   1)     TITLE - Title at top of chart
+#   2)  PTEMPF_A - Name of first file to process
+#   3)  LEGEND_A - First legend
+#   4)  PTEMPF_B - Name of second file to process
+#   5)  LEGEND_B - Second legend
+#
+#------------------------------------------------------------------------------
+
+plot2 ()
+{
+
+  echo ""
+  echo "     IN: plot2"
+
+  NOW=`date +%y%m%d_%H%M%S_%N`
+
+  echo "          PTEMPF_A: $PTEMPF_A"
+  echo "          LEGEND_A: $LEGEND_A"
+  echo "          PTEMPF_B: $PTEMPF_B"
+  echo "          LEGEND_B: $LEGEND_B"
+
+  PLOTCMDS=.PLOTCMDS_$NOW.gnuplot
+
+  cat << ..EOF > $PLOTCMDS
+    set terminal jpeg
+    set title "$TITLE"
+    set output "${TITLE}_${LEGEND_A}_${LEGEND_B}.jpeg"
+    plot \\
+     "$PTEMPF_A" pointsize 0 lw 2 title "$LEGEND_A" with lines, \\
+     "$PTEMPF_B" pointsize 0 lw 2 title "$LEGEND_B" with lines
+..EOF
+
+  echo ""
+  echo "GNUPLOT CMDS.."
+  cat $PLOTCMDS
+
+  echo "GNUPLOT starts.."
+
+  gnuplot -persist $PLOTCMDS
+
+  echo "GNUPLOT ends"
+  echo ""
+
+}
+
+#!/bin/sh
+#   +----------------------------+
+#---| BASH PROC TO PLOT ONE FILE |----------------------------------------------
+#   +----------------------------+
+#   +------+
+#---| plot |--------------------------------------------------------------------
+#   +------+
+#
+# Plots the data found in one file
+#
+# Args:
+#
+#   1) Name of file to process
+#   2) Title
+#   3) Legend
+#------------------------------------------------------------------------------
+
+plot ()
+{
+
+  echo ""
+  echo "     IN: plot"
+
+  NOW=`/home/bbyers/bin/NOW`
+
+  INPUTF=$1
+  TITLE=$2
+  LEGEND=$3
+  OUTPUTF=`basename $INPUTF`.jpeg
+
+  echo "             NOW: $NOW"
+  echo "          INPUTF: $INPUTF"
+  echo "           TITLE: $TITLE"
+  echo "          LEGEND: $LEGEND"
+  echo "         OUTPUTF: $OUTPUTF"
+
+  PLOTCMDS=.GNUPLOTCMDS_$NOW.gnuplot
+
+  cat << ..EOF > $PLOTCMDS
+
+    set terminal jpeg
+    set output "$OUTPUTF"
+
+    #et title "$TITLE" font "Helvetica,18"
+    #et title "$TITLE" font "Arial,18"
+    plot "$INPUTF" pointsize 0 title "$LEGEND" with lines
+
+..EOF
+
+  echo "Running gnuplot.."
+  gnuplot -persist $PLOTCMDS
+  echo "Finished gnuplot, checking output file.."
+  lsal $OUTPUTF
+  echo ""
+
+}
+
+#   +------+
+#---| MAIN |---
+#   +------+
+
+if [ $# -ne 3 ]; then
+  echo
+  echo USAGE: `basename $0` FILE title legend
+  echo
+  exit
+fi
+
+plot $1 $2 $3
+

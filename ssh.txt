@@ -1,0 +1,307 @@
+
+***
+### Files in ~/.ssh..
+
+**~/.ssh/id_rsa**
+
+>    User's private key
+
+**~/.ssh/id_rsa.pub**
+
+>     User's public key
+>     *NOTE: this filename is not standardized*
+>     *NOTE: User's public key might also be found in ~/.ssh/authorized_keys*
+
+**~/.ssh/authorized_keys**
+
+>    Public keys that are permitted to log in (to this host)
+
+**~/.ssh/known_hosts**
+
+>    Automatically maintained list of public keys from previously visited remote hosts
+
+**~/.ssh/config**
+
+>    User can configure per-host settings
+
+***
+### Example config file..
+
+##### (mine)
+        Host *
+             ForwardAgent no
+             ForwardX11 no
+             ForwardX11Trusted yes
+             # NOTE: host-specific section won't override this. Why???
+             #User gringo
+             Port 22
+             Protocol 2
+             ServerAliveInterval 60
+             ServerAliveCountMax 30
+        
+        Host github
+             HostName github.com
+             User git
+             Port 22
+
+##### (theirs)
+
+        ### default for all ##
+        Host *
+             ForwardAgent no
+             ForwardX11 no
+             ForwardX11Trusted yes
+             User nixcraft
+             Port 22
+             Protocol 2
+             ServerAliveInterval 60
+             ServerAliveCountMax 30
+         
+        ## override as per host ##
+        Host server1
+             HostName server1.cyberciti.biz
+             User nixcraft
+             Port 4242
+             IdentityFile /nfs/shared/users/nixcraft/keys/server1/id_rsa
+         
+        ## Home nas server ##
+        Host nas01
+             HostName 192.168.1.100
+             User root
+             IdentityFile ~/.ssh/nas01.key
+         
+        ## Login AWS Cloud ##
+        Host aws.apache
+             HostName 1.2.3.4
+             User wwwdata
+             IdentityFile ~/.ssh/aws.apache.key
+         
+        ## Login to internal lan server at 192.168.0.251 via our public uk office ssh based gateway using ##
+        ## $ ssh uk.gw.lan ##
+        Host uk.gw.lan uk.lan
+             HostName 192.168.0.251
+             User nixcraft
+             ProxyCommand  ssh nixcraft@gateway.uk.cyberciti.biz nc %h %p 2> /dev/null
+         
+        ## Our Us Proxy Server ##
+        ## Forward all local port 3128 traffic to port 3128 on the remote vps1.cyberciti.biz server ## 
+        ## $ ssh -f -N  proxyus ##
+        Host proxyus
+            HostName vps1.cyberciti.biz
+            User breakfree
+            IdentityFile ~/.ssh/vps1.cyberciti.biz.key
+            LocalForward 3128 127.0.0.1:3128
+
+
+#   +---------------------------------+
+#---| CHEAT SHEET #1 (PUTTY-SPECIFIC) |-------------------------------------------
+#   +---------------------------------+
+
+#   +------------------------+
+#---| Read instructions here |---
+#   +------------------------+
+
+    http://www.aota.net/Telnet/puttykeyauth.php4
+
+(or google: "putty ssh authorized_keys")
+
+#   +-----------------------+
+#---| ALSO: putty key notes |---
+#   +-----------------------+
+
+1. In putty gen, *don't* save a password with the keys 
+
+2. Create a shortcut to pageant in Start > Programs > Startup
+
+3. In step 2, append the fullpath (in quotes) of the private key file to the Target field of the shortcut. EXAMPLE:
+
+Target: "C:\Program Files\PuTTY\pageant.exe" "C:\Documents and Settings\bbyers\My Documents\.ssh\optiplex_privatekey.ppk"
+
+#   +----------------------------------------------------+
+#---| ALSO: MIGHT NEED TO MAKE THIS CAHNGE ON THE SERVER |---
+#   +----------------------------------------------------+
+
+// I had to make this change in Solaris 10, because the perms on my home
+// directory are 0x775, which is not accepted by default by sshd.
+
+FILE: /etc/ssh/sshd_config
+
+SECTION:
+
+	# Ensure secure permissions on users .ssh directory.
+	StrictModes no
+
+Set 'StrictModes' to 'no', because otherwise your home directory - not just
+$HOME/.ssh - needs to have proper privileges
+
+Once the file is changed, do a kill -1 for the sshd processes that aren't
+associated with any existing logins
+
+
+
+
+#   +------------------------------+
+#---| CHEAT SHEET #2 (SSH GENERIC) |----------------------------------------------
+#   +------------------------------+
+
+#   +----------------------------------------+
+#---| Login and immediately change directory |---
+#   +----------------------------------------+
+
+    EXAMPLE:
+
+    ssh -t saltwater 'cd /var/log && $SHELL'
+
+#   +---------------------------+
+#---| Problems and work-arounds |---
+#   +---------------------------+
+
+"Hangs" when logging off
+
+If you login to a host via SSH, start a process in the background, and then try
+to logoff leaving the background process running, your logout will hang if the
+background process has left any of its standard IO file descriptors open. In
+this case you get no warning message, the logoff simply hangs.
+
+In either case, you can force a disconnect by typing the SSH escape sequence,
+"~.". (all SSH escape sequence must be entered immediately following a CR).
+This will break any open detroit connections and kill the background process. If you
+need to leave the background process running, you should do something like this
+(for csh/tcsh users):
+
+ some-command </dev/null >&/dev/null &
+ exit
+
+The syntax for Bourne/Korn/BASH shell users is slightly different:
+
+ some-command </dev/null >/dev/null 2>&1 &
+ exit
+
+To launch a background process on another host from a script, you could do
+something like this (assuming your default shell is csh or tcsh):
+
+ ssh -x some-host some-command '</dev/null >&/dev/null &'
+
+#   +----------------------------+
+#---| SSH login without password |---
+#   +----------------------------+
+
+From: http://linuxproblem.org/art_9.html
+
+    ##zz A note from one of our readers: Depending on your version of SSH you
+    ##zz might also have to do the following changes:
+    ##zz
+    ##zz    + Put the public key in .ssh/authorized_keys2
+    ##zz    + Is it underscore (_) or dash (-) in .ssh/authorized-keys ???
+    ##zz    + Change the permissions of .ssh to 700
+    ##zz    + Change the permissions of .ssh/authorized_keys2 to 640
+
+To login to bbyers@server from client w/o password:
+
+// First, as user bbyers on client, generate a pair of authentication
+// keys. Do not enter a passphrase.
+
+  client_> ssh-keygen -t rsa
+  Generating public/private rsa key pair.
+  Enter file in which to save the key (/export/home/bbyers/.ssh/id_rsa): 
+  Created directory '/export/home/bbyers/.ssh'.
+  Enter passphrase (empty for no passphrase): 
+  Enter same passphrase again: 
+  Your identification has been saved in /export/home/bbyers/.ssh/id_rsa.
+  Your public key has been saved in /export/home/bbyers/.ssh/id_rsa.pub.
+  The key fingerprint is:
+  3e:4f:05:79:3a:9f:96:7c:3b:ad:e9:58:37:bc:37:e4 bbyers@client
+
+// Now use ssh to create a directory ~/.ssh as bbyers on server. (The
+// directory might already exist, which is fine):
+
+  client> ssh bbyers@server mkdir -p .ssh
+  bbyers@server's password: 
+
+// Finally append bbyers' new public key to bbyers@server:.ssh/authorized_keys, and enter
+// bbyers's password one last time:
+
+  client_> cat .ssh/id_rsa.pub | ssh bbyers@server 'cat >> .ssh/authorized_keys'
+  bbyers@server's password: 
+
+#   +---------+
+#---| EXAMPLE |---
+#   +---------+
+
+# On the host you're going to be logging in FROM..
+
+ssh-keygen -t rsa
+ssh bbyers@someserver mkdir -p .ssh
+cat .ssh/id_rsa.pub | ssh bbyers@someserver 'cat >> .ssh/authorized_keys'
+
+# My iRobot home setup
+
+ssh rbyers@10.0.0.7 mkdir -p .ssh
+cat ~/.ssh/id_rsa.pub | ssh rbyers@10.0.0.7 'cat >> .ssh/authorized_keys'
+
+ssh rbyers@6780l mkdir -p .ssh
+cat ~/.ssh/id_rsa.pub | ssh rbyers@6780l 'cat >> .ssh/authorized_keys'
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sshd on Linux Mint
+
+By default sshd is not installed on Linux Mint. Get it here...
+
+        apt install openssh-server -y
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sshd on VirtualBox
+
+NOTE: By default VirtualBox sets up the network interface as NAT, and its network is not accessible
+to the host system. We can ssh out of the vbox but not into it.
+
+Quick fix for this is simply to change the virtualbox network setting from NAT to Bridged. This
+change occurs immediately (!)
+
+... the vbox will now be on the same subnet as the host system, and ssh works both directions.
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sshfs (mount a filesystem via ssh)
+
+(1) install 'sshfs' (on client)
+
+(2) Create an ssh config file (~/.ssh/config, on client) similar to...
+
+    Host irbt-9123m-MacOS
+        HostName irbt-9123m-MacOS
+        User rbyers
+        ForwardAgent yes
+    
+    Host irbt-9123m-ubuntu
+        #ostName irbt-9123m-ubuntu (not working with a hostname here. use an IP addr instead. maybe fails if the hostname isn't in dns?)
+        HostName 10.211.55.3
+        User rbyers
+        ProxyCommand ssh irbt-9123m-MacOS -W %h:%p
+
+    Host 10.211.55.3
+        HostName 10.211.55.3
+        User rbyers
+        ProxyCommand ssh 10.0.0.7 -W %h:%p
+
+    ... ForwardAgent (on jump host) and ProxyCommand (on dest host) are *important* if going through a jump host
+
+(3) mount by issuing commands similar to...
+
+    mkdir -p ~/mount/irbt-9123m-ubuntu
+    sshfs rbyers@irbt-9123m-ubuntu:/home/rbyers ~/mount/irbt-9123m-ubuntu
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GOAL: pycharm on parallels-ubuntu with X11 display on my desktop - but when pytest is run ROBOSCOPE OPENS ON PARALLELS-UBUNTU (!!!)
+
+This is crucial because I have not been able to get roboscope to run across an X11 forwarding connection :-(
+
+The steps are...
+
+from my desktop, ssh to parallels with MacOs as Jump Host and X11 forwarding enabled
+
+
+[  f-it, just set Parallels Desktop to use bridged networking. 10xs simpler!!!  ]
+
+
+

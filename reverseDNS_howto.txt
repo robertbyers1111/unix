@@ -1,0 +1,128 @@
+From: Joseph S D Yao <jsdy@cospo.osis.gov>
+Newsgroups: comp.protocols.dns.bind
+Subject: Reverse Lookup Primer [Was: Re: Reverse Lookup Fails???]
+Date: 12 Feb 2001 11:15:11 -0800
+Organization: none
+Lines: 103
+Approved: usenet@vix.com
+Message-ID: <969cnv$t95@pub3.rc.vix.com>
+References: <3A87F3D6.000001.24571@wm002.joymail.com>
+NNTP-Posting-Host: pub3.rc.vix.com
+Mime-Version: 1.0
+X-Trace: isrv4.pa.vix.com 982005305 32125 204.152.186.34 (12 Feb 2001 19:15:05 GMT)
+X-Complaints-To: abuse@isc.org
+NNTP-Posting-Date: 12 Feb 2001 19:15:05 GMT
+Return-Path: <bind-users-bounce@isc.org>
+X-Cc: bind-users@isc.org
+X-Original-Message-ID: <20010212135826.H28047@washington.cospo.osis.gov>
+Mail-Followup-To: simmen <simmen@joymail.com>, bind-users@isc.org
+X-Mailer: Mutt 1.0i
+Errors-To: bind-users-bounce@isc.org
+X-List-Id: <bind-users.isc.org>
+
+
+On Mon, Feb 12, 2001 at 06:31:50AM -0800, simmen wrote:
+> the problem is with the reverse lookup from out side the domain..
+> i.e when i reverse lookpu from my server it works..but when i reverse lookup my own domain form any other server (from nslookup) it fails..and returns me with the erroe "non-existant domain"..
+
+I haven't posted this "Reverse lookup primer" for a while.  Here it is.
+It contains the answer to your question.
+
+-- 
+Joe Yao				jsdy@cospo.osis.gov - Joseph S. D. Yao
+COSPO/OSIS Computer Support					EMT-B
+-----------------------------------------------------------------------
+This message is not an official statement of COSPO policies.
+
+
+-- Attached file included as plaintext by Listar --
+
+> Subject: Reverse DNS, IP addr -> name via PTR
+> Date: Thu, 5 Aug 1999 13:27:38 -0400 (EDT)
+> 
+> OK, one more time, since there has been a spate of questions about this
+> again ...
+> 
+> If you have a domain and a set of IP addresses, e.g., foo.com and
+> 1.2.3.0/24, then you will not only want to do forward DNS lookups from
+> host names to IP addresses, but also reverse DNS lookups from the host
+> names to the IP addresses.  This does NOT happen automatically!
+> Instead, you have to construct a separate reverse DNS zone whose name
+> is based on the portion of the network that you own.  [I'll mention
+> what to do if you don't own the whole network portion, later.]
+> 
+> There is nothing magic about a reverse DNS zone.  By convention, it is
+> based on the "in-addr.arpa" domain.  Its name is constructed on the
+> REVERSED IP address of the network - in this case, 3.2.1.in-addr.arpa.
+> In all ways, it is a regular domain - its parent domain, e.g., is
+> 2.1.in-addr.arpa - we'll get to why that's important in a minute.
+> 
+> In the named.boot or named.conf, on your master [primary] name server,
+> you associate the name of the domain/zone with the name of some file
+> that contains the zone information.  In this zone file, you will have,
+> as always:
+> 
+> 	$TTL	nnnnnnn
+> 	@	IN  SOA	...
+> 		IN  NS	ns.foo.com.
+> 
+> and then you must put your pointers from the host numbers back to the
+> names, e.g.:
+> 
+> 	1	IN  PTR		router.foo.com.
+> 	2	IN  PTR		firewall.foo.com.
+> 	3	IN  PTR		host.foo.com.
+> 	...
+> 	42	IN  PTR		answer.foo.com.
+> 	...
+> 
+> Now, giving your local name server all of this information, it will
+> return any reverse-DNS query with the proper information.  E.g.,
+> queries of the form:
+> 
+> 	nslookup  1.2.3.42    ns.foo.com
+> 	nslookup  -type=ptr  42.3.2.1.in-addr.arpa   ns.foo.com
+> 	dig   @ns.foo.com   42.3.2.1.in-addr.arpa  ptr
+> 
+> will return the host name as part of the answer.
+> 
+> Internally to your network, if you have configured your /etc/resolv.conf
+> file to point to ns.foo.com's IP address, then you don't even have to
+> tell it to ask ns.foo.com.  Queries will automatically go to that name
+> server.
+> 
+> EXTERNALLY to your network, it's a different story.  If you want
+> others to also see your reverse DNS [and you usually do], you need to
+> get the co-operation of whoever owns your reverse DNS parent domain,
+> 2.1.in-addr.arpa.  They must list "3" as a subdomain of their domain,
+> with an NS record in their zone file pointing to your name server.
+> Then someone asking from the outside about 42.3.2.1.in-addr.arpa will
+> be able to go to the root server, find out who owns 1.in-addr.arpa, and
+> from them who owns 2.1.in-addr.arpa, and from them who your name server
+> is ... and thence get the name.  Just exactly as in forward DNS lookups.
+> 
+> NOW, if your network does not break at an octet boundary, you must look
+> at RFC 2317, which has a trick to create a subnetwork that includes
+> your network name and bitsize, and then have your hosts' IP addresses
+> be names off that network.  You can use the trick detailed in RFC 2317
+> or one like it.  Believe me, it works.  But you need the co-operation
+> of the owner of your parent network.
+> 
+> If you only have a few IP addresses, or you have IP addresses from
+> different networks, you will probably want to just leave forward and
+> reverse DNS entries to the owners of those networks.  Again, they have
+> to be willing.
+> 
+> Fair 'nuff?
+
+--
+Joe Yao				jsdy@cospo.osis.gov - Joseph S. D. Yao
+COSPO/OSIS Computer Support					EMT-B
+-----------------------------------------------------------------------
+This message is not an official statement of COSPO policies.
+
+
+
+
+
+

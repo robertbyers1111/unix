@@ -1,0 +1,16 @@
+To change your login shell on a standalone client:
+
+	% chsh
+
+To change your login shell under NIS:
+
+	% passwd -r nis -e
+
+Example:
+
+Enter login(NIS) password:
+Old shell: /bin/bash
+New shell: /bin/tcsh
+NIS passwd/attributes changed on loki
+> exit
+

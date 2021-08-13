@@ -1,0 +1,26 @@
+
+#-------------#
+# FOR SOLARIS #
+#-------------#
+
+
+
+=>Make a remote printer:
+
+  lpadmin -p localName -s remoteName 
+
+  Example: lpadmin -p ljsw -s ljsw 
+
+
+
+=>Set system default printer:
+
+  lpadmin -d dest
+
+
+
+=>Location of printer configuration file:
+
+  /etc/printers.conf
+
+  (note: normally no need to edit this if using lpadmin)

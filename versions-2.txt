@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Four ways to determine linux OS and kernel versions
+#
+# [1] cat /etc/*-release
+#
+# [2] lsb_release -a
+#
+# [3] uname -mrs
+#
+# [4] cat /proc/version
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+doit (){
+  echo
+  echo % $*
+  $*
+}
+
+# [1]..
+find -L /etc -maxdepth 1 -name '*-release' -type f | while read line
+do
+  doit cat $line
+done
+
+# [2]..
+doit lsb_release -a
+
+# [3]..
+doit uname -mrs
+
+# [4]..
+doit cat /proc/version
+
+echo

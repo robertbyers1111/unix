@@ -1,0 +1,99 @@
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NOTE: I was about to post the question below to unix.stackexchange.com when I suddenly did something that fixed the problem. I don't know what fixed it.
+
+I had been experimenting with setting HISTSIZE in .bashrc (usually I set it indirectly via ~/.bashrc_rmbjr60) and noticed in .bashrc HISTSIZE was not
+set using 'export', so I added export to HISTSIZE in bashrc (it already used export in bashrc_rmbjr60). Then the bash_history file started working,
+albeit with the exported value from bashrc_rmbjr60. Very confusing!
+
+I removed the export from the HISTSIZE in .bashrc, and guess what? ... it *still* works (wtf???)
+
+At this point I gave up. At least I have it working.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Note: one interesting post I found along the way was this...
+
+https://unix.stackexchange.com/questions/170315/bash-history-keeps-truncating
+
+
+.bash_profile is only loaded if bash is started as a login shell. On OSX, the default is to start a login shell in every terminal, so that's the common case for you. But if you ever type bash to run a nested shell, or run screen or tmux, or anything else that starts an interactive shell, you'll end up with an interactive, non-login shell. This shell only reads ~/.bashrc, it doesn't read ~/.bash_profile. Since you exported HISTFILESIZE to the environment, a shell that's started from a program started from a terminal that ran a login shell will inherit that setting. But a shell started independently will not (which is a fundamental flaw in OSX's approach of starting login shells in terminals.) So a shell started inside a terminal emulator that doesn't start a login shell, or in a screen session started by a cron job, or in Aquamacs, etc. won't have any HISTSIZE or HISTFILESIZE setting and thus will use the default values.
+
+The fix is to set HISTSIZE and HISTFILESIZE at the proper place: in ~/.bashrc.
+
+Bash bizarrely reads .bashrc only from non-login interactive shells. To get it read in all interactive shells, put the following line in your .bash_profile:
+
+case $- in *i*) . ~/.bashrc;; esac
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is the entire post I almost posted to unix.stackexchange...
+
+My bash history file will not grow beyond 1000 commands (actually, 2000 lines, since I use HISTTIMEFORMAT), even though I've set my bash environment to do so. 
+
+My active bash login shell grows its history well beyond 1000, but after I logout and log back in, the .bash_history file never grows beyond 2000 lines.
+
+I have set HISTFILESIZE and HISTSIZE to large numbers (in the 10,000 - 15,000 range) and I have the shell option 'histappend' enabled. 
+
+For example, in this output I'm logged in using bash and my current bash_history file contains 2000 lines (including the timestamp lines), and my current login shell has 1011 lines...
+
+    % wc -l ~/.bash_history
+    2000
+    % history | wc -l
+    1011
+
+Next, I ran several thousand commands in current bash shell and checked again ...
+
+    % wc -l ~/.bash_history
+    2000
+    % history | wc -l
+    5518
+
+... so far no issues, everything is good.
+
+Now I log out, log back in, and immediately check the history file size...
+
+    % wc -l ~/.bash_history
+    2000
+    % history | wc -l
+    1002
+
+... as you can see, the .bash_history file did not grow beyond 1000 commands (2000 lines).
+
+That is a problem, because I've set several environment variables to enable the history file to grow much larger than 1000 commands, as seen here ...
+
+    % set | grep -i hist
+    BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:g    lobasciiranges:histappend:interactive_comments:progcomp:promptvars:sourcepath
+    HISTCONTROL=ignoredups
+    HISTFILE=/home/floyd/.bash_history
+    HISTFILESIZE=10101
+    HISTSIZE=10101
+    HISTTIMEFORMAT='[%y%m%d %H:%M:%S] '
+    SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+
+    % shopt | grep -i hist
+    cmdhist        on
+    histappend     on
+    histreedit     off
+    histverify     off
+    lithist        off
+
+Even if I do 'history -a' prior to logging out, which results in a large .bash_history file before logout, after the logout and login, it gets trimmed down to 1000 commands again...
+
+    % history -a
+    % wcl ~/.bash_history ; .history ^ |wcl 
+    11046 /home/rmbjr60/.bash_history
+    5524
+
+NOW: logout, and then login again
+
+    % wcl ~/.bash_history ; .history ^ |wcl 
+    2000 /home/rmbjr60/.bash_history
+    1001
+
+... this is on Linux Mint 20.1 and gnu bash 5.0.17 as shown here...
+
+    % grep PRETTY /etc/os-release 
+    PRETTY_NAME="Linux Mint 20.1"
+
+    % bash --version | head -1
+    GNU bash, version 5.0.17(1)-release (x86_64-pc-linux-gnu)
+

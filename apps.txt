@@ -1,0 +1,75 @@
+
+file mgr
+    nemo
+    krusader
+    dolphin
+
+hex editor
+    okteta
+
+terminal
+    yakuake
+    konsole
+    gnome-terminal
+
+text editor
+    vim
+    kate
+    nemiver
+    neovim
+
+IDE/develop
+    kdevelop
+    code
+    eclipse
+    gcc
+    g++
+    gdb
+    gh (github cli)
+
+remote desktop
+    vinagre
+
+screen capture
+    flameshot
+
+diff tool
+    meld
+    vimdiff
+
+clipboard mgr
+    copyq
+
+doc viewer
+    okular PDF
+    scribus PDF
+    sqlitebrowser
+    mdbtools
+
+media player
+    vlc
+
+remote desktop
+    krdc (client)
+    krfb (server)ZZ
+
+sysinfo
+    htop
+    iotop
+    glances
+    bashtop
+    tree
+    llvm
+    hwinfo
+    hwloc
+    kinfocenter
+    ksystemlog
+
+disk tools
+    kde partition mgr
+
+productivity
+
+other
+    rlwrap (readline wrapper)
+    ktorrent

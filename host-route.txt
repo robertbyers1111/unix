@@ -1,0 +1,10 @@
+
+raishu ~ 18:40:26# route add 10.10.34.24 10.10.44.254
+add host 10.10.34.24: gateway 10.10.44.254
+raishu ~ 18:42:13# ping 10.10.34.24
+^C
+raishu ~ 18:42:41# route delete 10.10.34.24 10.10.44.254
+delete host 10.10.34.24: gateway 10.10.44.254
+raishu ~ 18:42:50# ping 10.10.34.24
+10.10.34.24 is alive
+

@@ -1,0 +1,3 @@
+to see what release of redhat is running:
+
+cat /etc/redhat-release

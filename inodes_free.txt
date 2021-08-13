@@ -1,0 +1,5 @@
+df -e
+
+or..
+
+/usr/ucb/df -i

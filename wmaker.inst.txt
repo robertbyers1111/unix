@@ -1,0 +1,7 @@
+To setup Window Maker for yourself, run /usr/local/bin/wmaker.inst
+
+To customize the root menu, edit ~/GNUstep/Library/WindowMaker/menu
+
+NB: if only root menu appears, then make sure 'cpp' is on path. Example:
+
+	ln -s /usr/lib/cpp /usr/local/bin/cpp

@@ -1,0 +1,39 @@
+
+------------------------------------------------------------------------
+
+To sync two local directories bi-directionally..
+
+1) Sync from ~/A/lib to ~/B/lib..
+
+   
+   cd ~/A
+   rsync -aui lib ~/B
+
+2) Then sync from B to A..
+
+   cd ~/B
+   rsync -aui lib ~/A
+
+------------------------------------------------------------------------
+
+-a is equivalent to -rlptgoD
+   -r  recursive
+   -l  recreate symlinks on dest
+   -p  preserve permissions
+   -t  preserve timestamps
+   -g  preserve group
+   -o  preserve owner
+   -D  preserve devices and specials
+
+   -u           avoids overwriting newer files on the dest
+
+   -i           output an itemized change-summary for all updates
+
+   --list-only  list the files instead of copying them
+
+   -v           verbose
+
+------------------------------------------------------------------------
+
+vi ~/public_html/unix/rsync.txt
+

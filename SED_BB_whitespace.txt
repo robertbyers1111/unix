@@ -1,0 +1,73 @@
+#!/bin/sh
+
+#====================================================
+#
+# This is OK:
+
+cat <<EOF | sed 's/ [ <TAB>]*/ /g'
+   abc     def    
+  123      456
+ uvw       xyz
+EOF
+
+NOTE: '<TAB>' is, literally, the TAB character. '\t' is NOT supported by sed
+NOTE: In tcsh, preface <TAB> with Ctrl-V
+NOTE: '+' is NOT a sed RE operator
+
+#====================================================
+#
+# Since '+' is NOT a sed RE operator, this FAILS:
+
+cat <<EOF2 | sed 's/[ <TAB>]+/ /g'
+   this    is a    failure demo
+  this    is a     failure demo
+ this    is a      failure demo
+EOF2
+
+
+#====================================================
+#
+# From http://www.csua.berkeley.edu/~jlau/cs9e/answers2.txt
+
+   write up a shell script that takes in the contents of a lyrics file
+   on standard input, and produces a cleaned up lyrics file on
+   standard output by accomplishing the following tasks [your shell
+   script can call sed scripts or whatever else you want...]:
+
+   1. make everything lowercase
+
+   2. turn consecutive spaces into one space, and remove
+      leading and trailing spaces... so something like [in the
+      following example, spaces are represented with '_']
+      ____come_down_and_waste_away_with___me____
+      ... should turn into ...
+      come_down_and_waste_away_with_me
+
+   3. turn consecutive blank lines into one blank line, and remove
+      leading and trailing blank lines... [this means the first line
+      and last line of your output should not be a blank line] for
+      this exercise, consider a line that contains only spaces as
+      blank, too.
+
+  ANSWER:
+
+  filter:
+
+   tr A-Z a-z | tr -s ' ' | sed 's/^ *\(.*\) *$/\1/' | sed 's/^ *$//' |
+   awk -f shrinkblanks.awk
+
+   shrinkblanks.awk:
+   BEGIN { blank = 0; foundfirstnonblank = 0 }
+   /^$/ { blank = 1 }
+   /./ { if (blank == 1 && foundfirstnonblank == 1) 
+            print ""
+         print
+         blank = 0
+         foundfirstnonblank = 1 }
+
+   NOTES:
+   o first tr does the lowercase
+   o second tr turns consecutive space into one space
+   o first sed removes leading and/or trailing spaces
+   o second sed turns lines containing only whitespace into blank lines
+   o awk removes leading and trailing blank lines, and turns consecutive blank lines into one.

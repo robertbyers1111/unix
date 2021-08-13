@@ -1,0 +1,26 @@
+
+#-------------#
+# FOR SOLARIS #
+#-------------#
+
+
+
+=>Create a new user:
+
+  useradd -d <userdir> -m -s <shell> -u <uid> -g <group> <username>
+useradd -d /export/home/ellacoya -m -s /bin/tcsh -u 100 -g 100 ellacoya
+
+  EXAMPLE:
+  useradd -u 1330 -g ellacoya -d /export/home/bpilipovic -s /bin/tcsh -m -k /export/home/SKELETOR bpilipovic
+
+
+
+=>Modify a user:
+
+  usermod
+
+
+
+=>Remove a user:
+
+  userdel joeuser

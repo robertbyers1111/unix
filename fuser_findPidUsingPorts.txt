@@ -1,0 +1,13 @@
+
+Use 'fuser' to find which pid(s) are listening on a port.
+
+NOTE: Run as root.
+
+EXAMPLE:
+
+    sudo fuser -v 53/tcp
+                         USER        PID ACCESS COMMAND
+    53/tcp:              root       7785 F.... named
+                         named     11321 F.... named
+                         named     15657 F.... named
+

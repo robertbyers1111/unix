@@ -1,0 +1,141 @@
+#-Red Hat version
+  cat /etc/redhat-release
+
+#-Serial port properties
+  setserial -a /dev/ttyS1
+  or..
+  stty -a < /dev/ttyS1
+
+#-Remove StandOut Setting
+  tput rmso
+
+#-Process trace
+  /usr/bin/strace
+
+#-Packet capture/decode
+  tcpdump, ethereal or tethereal
+
+#-Change IP Address (three steps)
+ 1. ifconfig eth0 10.1.254.102 broadcast 10.1.255.255 netmask 255.255.0.0 up
+ 2. vi /etc/sysconfig/network-scripts/ifcfg-eth0
+ 3. vi /etc/hosts
+
+#-------------------------------------------------
+# Static Routes on LINUX (redhat):
+
+        /sbin/route add -host 1.1.3.3 gw 10.1.253.69
+        /sbin/route add -host 1.1.12.2 gw 10.1.253.42 dev eth2
+
+ default route:
+
+	route add -net 0.0.0.0 gw 10.1.254.254
+
+ to make static routes persistent:
+
+	vi /etc/sysconfig/static-routes
+
+ example contents of this file (each row must start in column 1):
+
+	eth0 net 0.0.0.0 gw 10.1.254.254
+	eth0 host 1.1.253.14 gw 10.1.253.14
+	eth0 host 1.1.253.45 gw 10.1.253.45
+	eth0 host 1.1.253.42 gw 10.1.253.42
+	eth0 host 1.1.2.2 gw 10.1.253.42
+	eth0 host 1.1.3.3 gw 10.1.3.3
+
+ to activate the file:
+
+	/etc/sysconfig/network-scripts/ifup-routes eth0
+
+#-------------------------------------------------
+# RPM
+
+#-Test an rpm file
+  rpm -ivv --test <rpmfile>
+
+#-Install, with verbose indications of all actions taken
+  rpm -ivv <rpmfile>
+
+#-Remove, with verbose indications of all actions taken
+  rpm -evv <rpmfile>
+
+#-Query a package
+  rpm -q <PKGname>
+
+#-List all packages on system
+  rpm -qa
+
+#-Convert RPM to cpio
+  rpm2cpio file.rpm > file.cpio
+  cpio -div < file.cpi
+
+#-For more info
+  http://www.getlinuxonline.com/omp/distro/RedHat/rpm.htm
+
+#-------------------------------------------------
+# X Window System
+
+#-Restart X
+  startx (what process does this during boot up?)
+
+#-Disable X windows
+  Ctrl-Alt-Backspace
+
+#-Scroll through video modes
+  ctrl-alt-kbd+ & ctrl-alt-kbd-
+
+#-Switch from X to a virtual text console
+  ctrl-alt-F1, ctrl-alt-F2, etc.
+
+#-Switch among already existing text consoles
+  alt-F1, alt-F2, etc.
+
+#-Go back to X
+  alt-F7 (not working?)
+
+#-------------------------------------------------
+# Window Manager
+
+vi ~/.wm_style
+
+NB: Other files that may impact window mgr:
+
+	/etc/X11/xinit/Xclients
+	(make sure contents of ~/.wm_style appear in the case statement)
+
+	~/.Xclients-default
+	~/.Xclients-*
+	~/.xinitrc
+	/etc/sysconfig/desktop
+
+DETAILS FOUND ON USENET:
+
+   "The normal start process for RH is to look at .wm_style and it
+will start whatever window manager you select there.  RH
+distributes 4 window managers on its CD's if you loaded all 4
+then you can start them by editing only .wm_style.  
+
+   BTW: If .wm_style is not set then the startup defaults into
+Fvwm95 - RH is not real explicit about this.  It's too bad as
+.wm_style is the key to getting windomanager flavors in RH and
+their startup scripts expect a value in there.
+
+   For running KDE.  RH runs xinit which invokes xinitrc which
+calls Xclient.  I forget which one it is but one of the two
+checks for a local .Xclients in your home dir.  If its found its
+executes.  Normally RH does not put an .Xclients in any home dir
+(obviously) but just in case I mention it for root.  KDE puts a
+.Xclients in your home dir which can be copied to users home dir
+to start KDE insted of whats in .wm_style.  When you have KDE and
+the KDE .Xclients file in your home dir it over-rides .wm_style. 
+It actually avoids it and does a start_kde.  But this makes
+switching managers flexable.  .wm_style and easily be set so if
+you copy .Xclients to .Xclients.kde anytime you want to revert to
+the manager in .wm_style you can delete .Xclients.  To
+reconfigure KDE just copy .Xclients.kde to .Xclients"
+
+ALSO FROM SAME THREAD:
+
+   "Easiest way to do this is to log in as the user you want --i.e.,
+root-- and then type 'usekde' at the command line. That'll take care
+of it."

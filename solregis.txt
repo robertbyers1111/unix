@@ -1,0 +1,3 @@
+To remove solaris registration upon CDE startup:
+
+Put DISABLE=1 into /etc/default/solregis

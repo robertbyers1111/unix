@@ -1,0 +1,19 @@
+
+Please the following link to decrypt TLS or SSL packets with wireshark:
+
+http://blogs.technet.com/b/nettracer/archive/2010/10/01/how-to-decrypt-an-ssl-or-tls-session-by-using-wireshark.aspx
+
+Additional information:
+
+- 172.17.1.1 is server IP address. This is the server (better to use SBC’s sip interface) using the certificate that we extracted the private key from.
+
+- 443 (for TLS default is 5061) is the TCP port at the server side.
+
+- http (in our case SIP)  is the protocol carried inside the SSL/TLS session
+
+- c:\tls\keyout.pem is the name of the file which includes the converted private key
+
+- c:\tls\debug2.txt is the name of the file which includes information about the decryption process
+
+Rouben
+

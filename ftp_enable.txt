@@ -1,0 +1,20 @@
+
+PROBLEM : Can telnet but not FTP.
+
+
+>I've commented out telnet and ftp from /etc/inet/inetd.conf, done a kill -
+>HUP <pid>. However when I uncomment telnet and ftp from inetd.conf, and 
+>kill -HUP <inetd pid> again, the system won't accept any ftps from normal 
+>users (but it accepts ftps from root). Any thoughts on why this might be 
+>happening?
+
+If you're getting connected, inetd.conf is obviously OK.  All inetd does is
+start up the daemon, it has no control over what the daemon does after
+that, such as per-user access control.
+
+The files that affect whether a particular user is able to login via FTP
+are /etc/ftpusers and /etc/shells.  If a user is in /etc/ftpusers, they're
+not allowed to FTP (yes, the file contains the opposite of what its name
+implies -- it should have been /etc/ftpnonusers).  Or if a user's login
+shell isn't in /etc/shells, they're not allowed to FTP.
+

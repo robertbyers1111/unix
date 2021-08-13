@@ -1,0 +1,3 @@
+#!/bin/sh
+echo Path you typed: $0
+echo Basename: `echo $0 | awk -F/ '{print $NF}'`

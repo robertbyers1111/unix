@@ -1,0 +1,11 @@
+#!/bin/sh
+
+/bin/ps -fj -u$LOGNAME |\
+ /bin/sort -k 4,4n |\
+ /bin/awk -F\  '{printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t",$1,$2,$3,$4,$7,$8,$9 ; for (i=10;i<=NF;++i) printf "%s ",$i ; printf "\nkill -1 -%s\n",$4}'
+
+
+
+#-- NOTE '$0' is shorthand for *all* positional parameters. EXAMPLE:
+  awk -F: '{printf "%s %s\n",$12,$0}' |\
+

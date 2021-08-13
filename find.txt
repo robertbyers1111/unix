@@ -1,0 +1,179 @@
+
+#---------------------------------------------------------------------
+#-- FILES MODIFIED IN FRACTIONAL TIME (1 hour in this example)
+
+    find . -mtime -0.0417
+
+    -----  ---------------
+    Hours  Fraction of Day
+    -----  ---------------
+
+      1    0.0417
+      2    0.0833
+      3    0.125
+      4    0.167
+      5    0.208
+      6    0.25
+      7    0.292
+      8    0.333
+      9    0.375
+     10    0.417
+     11    0.458
+     12    0.5
+     13    0.542
+     14    0.583
+     15    0.625
+     16    0.667
+     17    0.708
+     18    0.75
+     19    0.792
+     20    0.833
+     21    0.875
+     22    0.917
+     23    0.958
+
+
+#---------------------------------------------------------------------
+#-- Answer to my stackexchange question about prune and print..
+
+The implicit -print applies to the entire expression, not just the last part of it.
+
+    % find . \( -path '*blue*' -prune -o -type f \) -print
+    ./green/test.log
+    ./green/yellow/config.txt
+    ./green/yellow/test.log
+    ./green/config.txt
+    ./aqua/config.txt
+    ./cyan/blue
+    ./blue
+    ./aqua/blue
+
+It's not decending into the pruned directories, but it is printing out the top level.
+
+A slight modification:
+
+    % find . ! \( -path '*blue*' -prune \) -type f
+    ./green/test.log
+    ./green/yellow/config.txt
+    ./green/yellow/test.log
+    ./green/config.txt
+    ./aqua/config.txt
+
+(with implicit -a) would lead to having the same behavior with and without -print.
+
+In addition, find . -type f ! -path '*blue*' -prune should work similarly...
+
+
+#---------------------------------------------------------------------
+#-- Files in current directory, without going deeper
+
+    find . -maxdepth 1 -type f
+
+      or..
+
+    find * -type f -o -type d -prune -a ! -type d
+
+
+#---------------------------------------------------------------------
+#-- Directories in current directory, without going deeper
+
+    find * -type d -prune
+
+
+#---------------------------------------------------------------------
+#-- EXCLUDE ONE TREE
+
+    find . -name '*01' ! -path '*02*'
+
+
+#---------------------------------------------------------------------
+#-- IGNORE PERMISSION DENIEDS
+
+    find <paths> ! -readable -prune -o <other conditions like -name> -print
+
+      example..
+
+    find /etc ! -readable -prune -o -name '*'
+
+
+#---------------------------------------------------------------------
+#-- PIPE TO XARGS
+
+    find /etc ! -readable -prune -o -name '*g' -print0 | xargs -0n1 echo FILE:
+
+
+#---------------------------------------------------------------------
+#-- FIND LATEST
+
+    find ~/work ! readable -prune -o -name 'doakatest.sh' -type f \
+     | xargs /bin/ls --time-style="+Z%Y-%m-%d %H:%M:%S" -AlLFtrG \
+     | sed 's/.* Z20/20/' \
+     | sort -V
+
+
+#---------------------------------------------------------------------
+#-- DO NOT RUN FROM INSIDE VTE (?)
+#---------------------------------------------------------------------
+
+    find -L ~ -path ./vbe -prune -o -path ./perforceViews -prune -o -name '*.csv' -print
+
+    find -L ~ -path ./vbe -prune -o -path ./qw_INSTALL_akatest -prune -o -name '*.csv' -print
+
+    find -L ~ -path ./vbe -prune -o -name '*.csv' -print
+
+    find -P ~/vbe/akatest/alsi7 \
+     -path '*/proc' -prune -o -path '*/var' -prune -o ! -readable -prune \
+     -type f -print
+
+#   +--------------+
+#---| LATEST DEMOS |-----------------------------------------------------------
+#   +--------------+
+
+    find / ! \( -path '*proc*' -prune \) -o -type f
+
+    find . -readable \( -path './data' -prune \) -type f
+
+#-- Older attempt to traverse all of my local stuff without errors..
+
+    find . -readable -a ! \( -path './nfs' -prune \) -o ! \( -path './vbe/akatest/alsi8/proc' -prune \) -type f
+
+#-- Traverse *all* of my local stuff without any errors (but ignores all of ~/vbe/akatest/alsi8)..
+
+    find ~ -readable ! \( -path ~/vbe/akatest/alsi8 -prune \) -type f 
+
+    find ~ -readable ! \( -path ~/vbe/akatest/alsi8 -prune \) -type f -exec /bin/ls --time-style="+Z%Y-%m-%d %H:%M:%S" -AlLFtrG {} \;
+
+    (fyi: won't follow into ~/nfs unless you use find -L)
+    (fyi: '~' in the path only works without quotes)
+
+#-- exec multiple commands..
+
+    find . -type f -exec echo A:{} \; -exec echo B:{} \;
+
+#-- Ways to count number of files in each directory..
+
+    #--[A]--
+
+       find . -type d -print0 | while read -d '' -r dir
+       do
+           files=("$dir"/*)
+           printf "%5d files in directory %s\n" "${#files[@]}" "$dir"
+       done
+
+    #--[B]--
+
+       find -maxdepth 1 -type d | while read -r dir
+       do
+         printf "%s:\t" "$dir";
+         find "$dir" -type f | wc -l;
+       done
+
+    #--[C]--
+
+       shopt -s globstar    # to enable ** glob in bash
+       for dir in */; do a=( "$dir"/**/* ); printf "%10s  %s\n" "${#a[*]}" "$dir"; done
+
+#---------------------------------------------------------------------
+
+vi /home/rmbjr60/public_html/unix/find.txt
+

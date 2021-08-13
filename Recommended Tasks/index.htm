@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Tasks to automate</title>
+<link rev="made" href="mailto:webmaster@www.uwsg.indiana.edu">
+<!-- $Id: tasks.html,v 1.10 1996/10/09 22:01:39 leighg Exp $ -->
+<!--#config errmsg="" -->
+</head>
+<body>
+<!--#include virtual="/usail/include/header.inc" -->
+
+<div align="center"><small>
+
+<!--#include virtual="/usail/include/navbar-top.inc" -->
+<br clear="all">
+
+<a href="tools.html">
+<img src="/usail/edcert/images/prev.gif" alt="[EdCert previous]"
+align="middle"> </a>
+
+<a href="end.html">
+<img src="/usail/edcert/images/next.gif" alt="[EdCert next]"
+align="middle">
+</a>
+
+<a href="/usail/automation/">
+<img src="/usail/edcert/images/top.gif" alt="[EdCert top]"
+align="middle">
+</a>
+
+</small></div>
+<hr>
+<h1>Tasks to automate </h1>
+
+ Here are several examples of crontab entries and associated programs
+ that can be implemented on any Unix system. Slight modifications may
+ have to be done for each Unix flavor.
+<p>
+<b>Daily</b>
+<p>
+<ul>
+<li>Remove unused or unneeded core files
+<p>
+ These crontab entries use an the <i>find</i> command to
+ removed files that are old and, hopefully, useless.
+
+<blockquote>
+<pre>
+0 1 * * *  find / -atime +7 -name core -exec rm -f {} \;
+25 5 * * * find /usr/spool/printer/. -name '?f*' -type f -mtime +1 -exec rm -f {} \;
+15 1 * * *  find /tmp -atime +7 -exec rm -f {} \;
+19 1 * * *  find /var/tmp -atime +7 -exec rm -f {} \;
+</pre>
+</blockquote>
+
+  The first entry checks the whole system for files named core which
+  have not been accessed in the last seven days and removes them.
+<br>
+  The second entry checks the directory /usr/spool/printer/. for files
+  matching the regular expression <tt>?f*</tt>, these are printer
+  queue files, that have not been accessed in the last day and
+  removes them.
+<br>
+  The third and forth entries remove files from the /tmp and /var/tmp
+  directories that have not been accessed in the last seven days. 
+<p>
+<li>Monitor the system disk space on user home directories disk usage
+<p>
+  These crontab entries mail the output of the commands <i>df</i> and
+<i>du</i> to the root account so that they can be reviewed. In this
+way, the system administrator may monitor the amount of disk space
+available on all the filesystems and trace the users who have more
+than their fair share of disk space. 
+<blockquote>
+<pre>
+0 20 * * *       df -ks  | /usr/ucb/mail -s "Filesystem usage" root &gt; /dev/null 2&gt;&1
+0 8 * * *       du -ks /home/\* | sort -nr | head | /usr/ucb/mail -s "/home usage" root &gt; /dev/null 2&gt;&1
+</pre>
+</blockquote>
+
+</ul>
+<p> 
+
+<b>Weekly</b>
+<p> 
+<ul>
+<li>Perform sanity checks on filesystems
+<p>
+<blockquote>
+<pre>
+0 2 * * 1       fsck -n | /usr/ucb/mail -s "Filesystem check" root &gt; /dev/null 2&gt;&1
+</pre>
+</blockquote>
+
+This crontab entry uses the command <i>fsck</i> with the no write option
+to provide a status checking of all the mountable file systems while the
+system is in multi-user mode. The check is performed at two minutes after
+midnight on Monday.
+The output of the command will have some errors concerning the superblock,
+because the file system is currently mounted, however a long list of
+errors could mean impending disk failure. 
+</ul>
+<p>
+<b>Monthly</b>
+<p>
+<ul>
+<li>Run assorted monthly clean-up and reports 
+<p>
+  This cron table entry executes the script <i>/var/adm/monthly</i>
+  once at 5 minutes after one the first of each month. This allows
+  all the monthly tasks to be executed from one script instead of
+  having one entry for each task.
+
+<blockquote>
+<pre>
+5 0 1 * * /var/adm/monthly &gt; /dev/null 2&gt;&1
+</pre>
+</blockquote>
+Add to the script all the things that should be done at the
+first of the month.
+<blockquote>
+<pre>
+#!/bin/sh
+# Filename: /var/adm/monthly
+# Perform clean up, rollover of files
+# Solaris 2.x
+
+# Create a new lastlog
+cp -p /var/adm/lastlog /var/adm/lastlog.old
+cp /dev/null  /var/adm/lastlog
+
+# Create new wtmp files
+cp -p /var/adm/wtmp /var/adm/wtmp.old
+cp -p /var/adm/wtmpx /var/adm/wtmpx.old
+cp /dev/null /var/adm/wtmp
+cp /dev/null /var/adm/wtmpx
+
+# Run stat software for the ftp server and web server
+/usr/local/adm/stats
+</pre>
+</blockquote>
+<p>
+<li>Locate large files 
+<p> 
+  Once a month, on the first of the month, find all files in the /home 
+directory that has not been accessed in 16 days and are greater than
+10000 bytes. Mail the results to root for review. 
+
+<blockquote>
+<pre>
+10 0 1 * * find / -type f -xdev -atime +16 -size +10000 -exec ls -lt {} \; /
+   | /usr/ucb/mail -s "Large files report" root &gt; /dev/null 2&gt;&1
+</pre>
+</blockquote>
+</ul>
+
+<p>
+<hr>
+<I><A NAME="terms">Terms used</A>: <b>cron</b>.
+</I>
+
+
+
+<hr>
+<div align="center"><small>
+
+<!--#include virtual="/usail/include/navbar-bot.inc" -->
+<br clear="all">
+
+<a href="tools.html">
+<img src="/usail/edcert/images/prev.gif" alt="[EdCert previous]"
+align="middle"> </a>
+
+<a href="end.html"> 
+<img src="/usail/edcert/images/next.gif" alt="[EdCert next]"
+align="middle"> </a>
+
+<a href="/usail/automation/">
+<img src="/usail/edcert/images/top.gif" alt="[EdCert top]"
+align="middle"> </a>
+
+</small></div>
+
+<!--#include virtual="/usail/include/footer.inc" -->
+</body>
+</html>

@@ -1,0 +1,91 @@
+#   +-------+
+#---| Login |---
+#   +-------+
+
+IN:/etc/profile
+OUT:/etc/profile
+IN:my.bash_profile
+IN:my.bashrc
+IN:/etc/bashrc
+OUT:/etc/bashrc
+OUT:my.bashrc
+OUT:my.bash_profile
+
+#   +-------------------+
+#---| bash (without -l) |---
+#   +-------------------+
+
+IN:my.bashrc
+IN:/etc/bashrc
+OUT:/etc/bashrc
+OUT:my.bashrc
+
+#   +---------+
+#---| bash -l |---
+#   +---------+
+
+IN:/etc/profile
+OUT:/etc/profile
+IN:my.bash_profile
+IN:my.bashrc
+IN:/etc/bashrc
+OUT:/etc/bashrc
+OUT:my.bashrc
+OUT:my.bash_profile
+
+#   +----------------+
+#---| sh (without -l |---
+#   +----------------+
+
+#   +-------+
+#---| sh -l |---
+#   +-------+
+
+IN:/etc/profile
+GNU bash, version 3.2.25(1)-release (x86_64-redhat-linux-gnu)
+OUT:/etc/profile
+IN:my.profile
+OUT:my.profile
+
+
+
+#   +-------------------------------------------------------------+
+#---| WITHOUT my .bashrc and .bash_profile sourcing those in /etc |-------------
+#   +-------------------------------------------------------------+
+
+#   +-------+
+#---| Login |---
+#   +-------+
+
+IN:/etc/profile
+OUT:/etc/profile
+IN:my.bash_profile
+OUT:my.bash_profile
+
+#   +-------------------+
+#---| bash (without -l) |---
+#   +-------------------+
+
+IN:my.bashrc
+OUT:my.bashrc
+
+#   +---------+
+#---| bash -l |---
+#   +---------+
+
+IN:/etc/profile
+OUT:/etc/profile
+IN:my.bash_profile
+OUT:my.bash_profile
+
+#   +-----------------+
+#---| sh (without -l) |---
+#   +-----------------+
+
+#   +-------+
+#---| sh -l |---
+#   +-------+
+
+IN:/etc/profile
+OUT:/etc/profile
+

@@ -1,0 +1,33 @@
+How to Change Your Hostname In Solaris
+
+Sometimes even the simplest tasks, like changing your IP address or hostname
+can be every-so- vexing. First off, there is a handy little utility called
+hostconfig which is used for, you guessed it, editing the host information of
+your Solaris box. Typing it with no arguments will spit out some usage. You can
+achieve the same effect by editing the listed files below and then rebooting.
+Also note the very handy commands sysconfig and sysunconfig.
+
+/etc/hosts
+Vastly more important in Solaris than it is in Linux. This is where you specify
+the IP address of your hostname. Change the hostname here to match your hosts
+new name. It should be the same as what you specify in /etc/nodename.
+
+/etc/nodename
+This is just like /etc/HOSTNAME in Linux. It defines the realname of the host.
+Simply change it to whatever you want to call your host.
+
+/etc/hostname.hme0 (or other interface name)
+Change these to line up with what you specified in /etc/hosts. 
+
+/etc/net/tic*/hosts
+Change everything in here to line up with the files above. 
+
+/etc/resolv.conf
+Just like Linux. This is where you specify your DNS servers and domain
+resolution information. 
+
+/etc/defaultrouter
+Simply put the IP address of the default router for your solaris host. Note
+that Sun does not create this file by default, nor is there any other location
+where you may specify a default route.
+

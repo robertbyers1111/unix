@@ -1,0 +1,216 @@
+
+#---------------------------------------------------------------------
+# ALLOW NON-ROOT USERS TO RUN TETHEREAL (Solaris)
+
+   # cd /devices/pseudo
+   # chmod o+rw clone@0:hme
+
+   # ls -al clone@0:hme
+   crw----rw-   1 root     sys       11,  7 May  7  2003 clone@0:hme
+
+#   +-----------+
+#---| Acme MIBs |---
+#   +-----------+
+
+Example: load ap-smgmt.mib into wireshark on Windows
+
+1. Find the mib file (ap-smgmt.mib)
+
+2. Copy it to \Program Files\wireshark\snmp\mibs
+
+3. Rename the file to the *-MIB name found in its DEFINITIONS line. In this case, that line is:
+
+            APSYSMGMT-MIB DEFINITIONS ::= BEGIN
+
+  ..so we rename the file ap-smgmt.mib (exactly, without any further extension) to:
+
+            APSYSMGMT-MIB
+
+4. Wireshark > Edit > Preferences > Name Resolution > SMI (MIB and PIB) paths
+
+     Confirm the path \Program Files\wireshark\snmp\mibs appears
+
+5. Wireshark > Edit > Preferences > Name Resolution > SMI (MIB and PIB) modules
+
+     Add the DEFINITION from the mib file. In this example, the definition is:
+
+           APSYSMGMT-MIB
+
+#   +---------------------------+
+#---| Capture to multiple files |---
+#   +---------------------------+
+
+    -a  <capture autostop condition>
+        Specify a criterion that specifies when TShark is to stop writing to a capture file.  The criterion is of the form test:value, where test is one of:
+
+        duration:value Stop writing to a capture file after value seconds have elapsed.
+
+        filesize:value Stop writing to a capture file after it reaches a size of value kB.  If this option is used together with the -b option, TShark will stop writing to the
+        current capture file and switch to the next one if filesize is reached.  When reading a capture file, TShark will stop reading the file after the number of bytes read exceeds
+        this number (the complete packet  will be read, so more bytes than this number may be read).  Note that the filesize is limited to a maximum value of 2 GiB.
+
+        files:value Stop writing to capture files after value number of files were written.
+
+    -b  <capture ring buffer option>
+        Cause TShark to run in "multiple files" mode.  In "multiple files" mode, TShark will write to several capture files.  When the first capture file fills up, TShark will switch
+        writing to the next file and so on.
+
+        The created filenames are based on the filename given with the -w option, the number of the file and on the creation date and time, e.g. outfile_00001_20190714120117.pcap,
+        outfile_00002_20190714120523.pcap, ...
+
+        With the files option it's also possible to form a "ring buffer".  This will fill up new files until the number of files specified, at which point TShark will discard the
+        data in the first file and start writing to that file and so on.  If the files option is not set, new files filled up until one of the capture stop conditions match (or until
+        the disk is full).
+
+        The criterion is of the form key:value, where key is one of:
+
+        duration:value switch to the next file after value seconds have elapsed, even if the current file is not completely filled up.
+
+        interval:value switch to the next file when the time is an exact multiple of value seconds
+
+        filesize:value switch to the next file after it reaches a size of value kB.  Note that the filesize is limited to a maximum value of 2 GiB.
+
+        files:value begin again with the first file after value number of files were written (form a ring buffer).  This value must be less than 100000.  Caution should be used when
+        using large numbers of files: some filesystems do not handle many files in a single directory well.  The files criterion requires either duration, interval or filesize to be
+        specified to control when to go to the next file.  It should be noted that each -b parameter takes exactly one criterion; to specify two criterion, each must be preceded by
+        the -b option.
+
+        Example: -b filesize:1000 -b files:5 results in a ring buffer of five files of size one megabyte each.
+
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        EXAMPLE: Write files of size 10M until all files consume 5GB
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+            -a filesize:5000000 -b filesize:10000 -w demo.pcapng
+    
+        Filenames will be..
+    
+            demo_00001_20190714120117.pcapng
+            demo_00002_20190714120239.pcapng
+            ...
+
+#   +-----------------------+
+#---| FORMATTING THE OUTPUT |---------------------------------------------------
+#   +-----------------------+
+#
+# Data will display only if it exists, or isn't encrypted
+
+    tshark -n -c 10 -Tfields -e frame.len -e ip.src -e ip.len -e tcp.srcport -e tcp.len tcp
+
+or..
+
+    tshark -n -Tfields -e frame.len -e frame.protocols -e data tcp
+
+#-- Write pkts to stdout and use xxd to display in ASCII..
+
+    tshark -n -w- | xxd -c 256 | cut -c 650-
+
+#   +------------------+
+#---| TIMESTAMP FORMAT |--------------------------------------------------------
+#   +------------------+
+
+   -t  ad|a|r|d|dd|e
+
+   Set the format of the packet timestamp printed in summary lines. The format can be one of:
+
+   ad  absolute with date: The absolute date and time is the
+       actual time and date the packet was captured
+
+   a   absolute: The absolute time is the actual time the packet
+       was captured, with no date displayed
+
+   r   relative: The relative time is the time elapsed between
+       the first packet and the current packet
+
+   d   delta: The delta time is the time since the previous
+       packet was captured
+
+   dd  delta_displayed: The delta_displayed time is the time
+       since the previous displayed packet was captured
+
+   e   epoch: The time in seconds since epoch (Jan 1, 1970
+       00:00:00)
+
+#   +------------------+
+#---| tshark summaries |--------------------------------------------------------
+#   +------------------+
+
+#-- CONVERSATIONS
+
+    tshark -nq -zconv,eth -r ellacoya.cap
+    tshark -nq -zconv,ip -r ellacoya.cap
+    tshark -nq -zconv,tcp -r 0616a.pcapng
+    (note: there's a way to filter the conversations - see the tshark manpage)
+
+#-- SUMMARIES
+
+    tshark -nq -zio,phs -r arps.pcapng		- Protocol summaries
+    tshark -nq -zio,stat,1 -r arps.pcapng		- frames/bytes summaries per time interval (1 sec)
+    tshark -nq -zio,stat,10 -r arps.pcapng		- frames/bytes summaries per time interval (10 sec)
+    tshark -nq -zio,stat,60 -r arps.pcapng		- frames/bytes summaries per time interval (60 sec)
+
+#   +---------------+
+#---| READ filters  |-----------------------------------------------------------
+#   +---------------+
+#
+# (ethereal syntax)
+
+  tshark -r x.pcapng -R "tcp.port eq 123 or udp.port eq 123"
+  tshark -r x.pcapng tcp.srcport == 20
+  tshark -r x.pcapng ip.src == 10.1.254.116 and ip.len ge 80
+  tshark -r x.pcapng ip.addr == cs39.msg.sc5.yahoo.com
+
+  tshark -r x.pcapng \
+    not udp.port eq 53 \
+    and not eth.addr eq ff:ff:ff:ff:ff:ff \
+    and not ip.addr eq 239.255.255.250 \
+    and not icmp \
+    and not ipv6 \
+
+#   +-----------------+
+#---| CAPTURE filters |---------------------------------------------------------
+#   +-----------------+
+#
+# (tcpdump syntax)
+
+#-- MAC Address capture filters. First: specifies entire MAC address. Second: ethernet address starts with "02:
+
+    tshark ether host 00e0b16d4004
+    tshark -n ether\[0\] = 2
+
+#-- Other capture filter examples
+
+    tshark -f 'not igmp and not net 224 and ( udp port 161 or udp port 162 )'
+    tshark 255.255.255.255 and not host 10.0.0.6
+    tshark host bbyers and not tcp port 23 and not tcp port 139 and not tcp port 80
+    tshark host conveyer and icmp
+    tshark host conveyer and \(udp port 161 or udp port 162\)
+    tshark ip and not ip6 and not igmp and not udp port 53 and not udp port 137 and not udp port 138 and not udp port 5353 
+    tshark ip and not ip6 and not igmp and not udp port 53 and not udp port 137 and not udp port 138 and not udp port 5353 
+    tshark not host 192.168.1.255 and not host 239.255.255.250 and not host
+    tshark not host trout and host walrus
+    tshark not ipx and not arp and not icmp and not igmp and not host 192.168.255.255 and
+    tshark port 123 or udp port 123
+    tshark src conveyer
+
+    tshark -nq -w /tmp/cap.dat \
+      -i cscotun0 -i enxa0cec8150043 \
+      not ipx \
+      and not arp \
+      and not icmp \
+      and not igmp \
+      and not host 10.0.0.6
+
+    tshark -n ip \
+      and not ip6 \
+      and not igmp \
+      and not broadcast \
+      and not multicast \
+      and not host 10.0.0.6 \
+      and not net 172.44.0.0/16 \
+      and not udp port 137 \
+      and not udp port 5353 \
+      -i cscotun0 -i enxa0cec8150043
+
+~/public_html/unix/tshark.txt
+

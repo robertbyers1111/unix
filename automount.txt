@@ -1,0 +1,36 @@
+In article <a8cd904e.0210301011.279a0549@posting.google.com>,
+Bob - Andover, MA <tsreyb@yahoo.com> wrote:
+>I'm not the administrator of my network, so I only have root control
+>of my solaris client. He's got /usr/local on each client automounted
+>from a centralized server. Problem is, I'd like to disable the
+>automount for /usr/local and have my own /usr/local. But I do want to
+>keep automounter running, because the user home directories
+>(/home/users) are automounted.
+>
+>I checked my /etc/auto_master, thinking that might control the
+>automounter. But I don't see where the reference to /usr/local might
+>be. I have:
+>
+>% cat /etc/auto_master
+># Master map for automounter
+>#
+>+auto_master
+>/net            -hosts          -nosuid,nobrowse
+>/home           auto_home       -nobrowse
+>/xfn            -xfn 
+
+The "+auto_master" line means that it automatically includes the entries
+from the NIS auto_master map, which is presumably where the /usr/local
+automount comes from.  You can override this by putting:
+
+	/usr/local  -null
+
+in /etc/auto_master *before* the "+auto_master" line.
+
+-- 
+Barry Margolin, barmar@genuity.net
+
+
+
+[NOTE: Just edit auto_master, then umount /usr/local; ie, no need to restart any deamons. But,
+to restart automounting, I had to stop and restart automounts (/etc/rc2.d/S74autofs)]

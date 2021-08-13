@@ -1,0 +1,12 @@
+
+#-----------------#
+# snoop (tcpdump) #
+#-----------------#
+
+1) Packets to/from a particular host, EXCLUDING X Window System packets
+
+	snoop host eel ! port 34455
+
+2) Only RSHELL packets
+
+	snoop port 514

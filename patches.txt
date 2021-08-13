@@ -1,0 +1,4 @@
+-----------------------------------------
+DIPLAY CURRENTLY INSTALLED PATCHES
+
+showrev -p

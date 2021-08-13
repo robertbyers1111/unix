@@ -1,0 +1,35 @@
+
+           Word boundary:   \b
+     Not a word boundary:   \B
+           Start of word:   \<
+             End of word:   \>
+              whitespace:   [[:space:]]
+
+#-----------------------------------------------------------------------------
+#-- Ways to ignore permission errors from find command..
+
+{ find . > files_and_folders 2> >(grep -v 'Permission denied' >&2); }
+
+    or..
+
+find . -readable ...
+
+    or..
+
+find . 2>&1 | grep whatever
+
+#-----------------------------------------------------------------------------
+#-- Test grep exit status..
+
+  echo $XYZ | grep -q $SEARCH && echo YES! || echo no
+
+#-----------------------------------------------------------------------------
+#-- Recursive grep of only some files..
+
+    grep -r pytest.fixture --include "*.py" ~/iRobot
+
+#-----------------------------------------------------------------------------
+
+vi ~/public_html/unix/grep-cheat.txt 
+vi ~/public_html/unix/outputProcessSubstitution_withFind.txt
+

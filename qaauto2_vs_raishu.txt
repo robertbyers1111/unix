@@ -1,0 +1,4 @@
+sort -u on qaauto2: 13 seconds (GNU coreutils) 8.15
+sort -u on raishu:  15 minutes (!) (GNU coreutils) 8.4
+sort -u on raishu:  20 minutes (!) (GNU coreutils) 5.97
+

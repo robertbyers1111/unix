@@ -1,0 +1,122 @@
+
+#   +----------+
+#---| EXAMPLES |---
+#   +----------+
+
+# '5k' = Display 5 decimal places
+# '10i' = input is decimal
+# '16o' = output is hex
+
+dc <<EOF
+5k
+22
+7/p
+EOF
+
+dc << EOF
+1
+2+p
+3+p
+4+p
+EOF
+
+dc << EOF
+10i
+16o
+7p
+15p
+65535p
+EOF
+
+# BEWARE: using "10o" in the following actually _breaks_ the script (!)
+
+dc << EOF
+16i
+7p
+Ap
+FFp
+DEADp
+BEEFp
+EOF
+
+#   +----------+
+#---| Commands |---
+#   +----------+
+
+-------------------------------------------------
+  Macros
+-------------------------------------------------
+  |      |    ! |   system command
+  |      |    # |   comment
+  |    − |    x |   execute string as macro
+  |   −2 |   >r |   conditionally (top>second) execute register string as macro
+  |   −2 |   <r |   conditionally (top<second) execute register string as macro
+  |   −2 |   =r |   conditionally execute register string as macro
+  |   −2 |  !>r |   conditionally (top!>second) execute register string as macro
+  |   −2 |  !<r |   conditionally (top!<second) execute register string as macro
+  |   −2 |  !=r |   conditionally execute register string as macro
+  |      |    ? |   read input line and execute it
+  |      |    q |   quit macro (2 levels)
+  |    − |    Q |   quit macro (top of stack levels)
+
+-------------------------------------------------
+  Stack
+-------------------------------------------------
+  |   −* |    c |   clear stack
+  |    + |    d |   duplicate top of stack
+  |      |    r |   swap top two stack
+
+-------------------------------------------------
+  Registers and Arrays
+-------------------------------------------------
+  |    − |   sr |   store top into register r
+  |    + |   lr |   load register r onto stack
+  |    − |   Sr |   store top into register stack r
+  |    + |   Lr |   load register stack r onto stack
+  |   −2 |   :r |   save second into array r[top]
+  |  − + |   ;r |   load array r[top] onto stack
+
+-------------------------------------------------
+  Status
+-------------------------------------------------
+  |  − + |    Z |   count digits or characters
+  |  − + |    X |   count fraction digits
+  |    + |    z |   load stack size onto stack
+
+-------------------------------------------------
+  Parameters
+-------------------------------------------------
+  |    − |    k |   set precision
+  |    − |    i |   set input radix
+  |    − |    o |   set output radix
+  |    + |    K |   load precision onto stack
+  |    + |    I |   load input radix onto stack
+  |    + |    O |   load output radix onto stack
+
+-------------------------------------------------
+  Strings
+-------------------------------------------------
+  |    + |  […] |   load string onto stack
+  |  − + |    a |   save string (number: low byte; string: first char)
+
+-------------------------------------------------
+  Printing
+-------------------------------------------------
+  |      |    f |   print entire stack
+  |      |    p |   print top of stack (newline)
+  |    − |    n |   print top of stack (no newline)
+  |    − |    P |   print top of stack, string or convert num to string (no newline)
+
+-------------------------------------------------
+  Arithmetic
+-------------------------------------------------
+  | −2 + |    + |   add top two values
+  | −2 + |    − |   subtract top from second
+  | −2 + |    * |   multiply top two values
+  | −2 + |    / |   divide top into second
+  | −2 + |    % |   divide top into second and save remainder
+  |−2 +2 |    ~ |   divide top two values and save quotient and remainder
+  |  − + |    ^ |   exponentiate top two values (top is integer exponent)
+  | −3 + |    | |   modular exponentiation ?
+  |  − + |    v |   square root
+

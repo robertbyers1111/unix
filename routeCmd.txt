@@ -1,0 +1,5 @@
+Add a net route:
+  route add -net 10.5.0.0 -netmask 255.255.0.0 10.1.250.254
+
+Add a host route:
+  route add -host 10.5.250.254 10.1.250.254

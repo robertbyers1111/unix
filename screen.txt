@@ -1,0 +1,63 @@
+
+#   +-------------------------+
+#---| TO GET SCREEN TERMTYPES |---
+#   +-------------------------+
+
+    /usr/local/share/terminfo/s/screen-w
+    /usr/share/lib/terminfo/s/screen-w
+
+    They're currently installed on scmbag and testfire (apr'04)
+
+    Also, I'm not sure it is used, but /etc/termcap has been updated as well
+
+#   +--------+
+#---| DETACH |---
+#   +--------+
+
+    Ctrl-A D
+
+#   +------------+
+#---| FIT SCREEN |---
+#   +------------+
+
+    Ctrl-A F
+
+#   +---------------+
+#---| RESIZE SCREEN |---
+#   +---------------+
+
+ o Ctrl-A, W (uppercase 'W')
+
+#zzz #   +-------------------------+
+#zzz #---| SCROLLBACK (old school) |---
+#zzz #   +-------------------------+
+#zzz 
+#zzz Ctrl-A,:copy (keystrokes, ignore spaces: ctrl-A : copy <ENTER>)
+#zzz Ctrl-B (Back)
+#zzz Ctrl-F (Forward)
+#zzz Esc or ENTER (~3 times) to escape from copy buffer
+
+#   +---------------------+
+#---| SCROLLBACK (FANCY!) |---
+#   +---------------------+
+
+    Add this to ~/.screenrc ..
+
+    termcapinfo xterm* ti@:te@
+
+#   +----------------------+
+#---| My current .screenrc |---
+#   +----------------------+
+
+    termcapinfo xterm* ti@:te@
+    vbell off
+    bell_msg ""
+
+#-----------------------------------------------------------------------
+
+screen -list
+screen -Ar <num>         # attach an already-attached screen
+screen -x <num>          # attach a detached screen
+
+#-----------------------------------------------------------------------
+vi /home/rbyers/public_html/unix/screen.txt

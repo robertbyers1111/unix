@@ -1,0 +1,35 @@
+I've been reading up on find's -prune action. One common task I do is to process only
+the files of a directory, ignoring all directories.
+
+Prune, from what I've learned, is great for ignoring directories if you know their names
+(or wildcards matching their names). But what if you don't know their names?
+
+I found that -maxdepth achieves what I'm trying to do. I'm just wondering what the
+equivalent -prune approach might be.
+
+For example, say I want to process all the files of my home directory, but not recurse
+into any subdirectory. Let's say my directory structure and files look like this
+(directories ending in '/'):
+
+~/tmpData.dat
+~/.bashrc
+~/.vimrc
+~/.Xdefaults
+~/tmp/
+~/tmp/.bashrc
+~/bkups/.bashrc
+~/bkups/.vimrc
+~/bkups/.Xdefaults
+~/bkups/tmpData.dat
+
+.. what would be the correct find/prune command?
+
+[-----------------------------------------------------------------------------------]
+
+OK, I found my own solution. I simply specify pattern(s) that match everything in my
+home directory ('~/*' for example). But in order to include all my dot files (.bashrc,
+etc.), I have to use two patterns; one for non-dotted filenames and one for the files
+starting with dots:
+
+        find ??* ??.* -type d -prune -o -type f -print
+

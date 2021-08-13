@@ -1,0 +1,27 @@
+
+#   +-----------------------------+
+#---| Display a raw man page file |---
+#   +-----------------------------+
+
+	nroff -man file
+
+    Example:
+
+	nroff -man /usr/local/snmp_dist/snmpwalk.1
+
+#   +---------------------+
+#---| Update windex files |---
+#   +---------------------+
+
+	catman -M path -w
+
+    Example:
+
+	catman -M /usr/lnms/man -w
+
+#   +----------------------------+
+#---| Display without formatting |---
+#   +----------------------------+
+
+    man bash | col -bx
+

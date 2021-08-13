@@ -1,0 +1,106 @@
+#--------------------
+# LINUX
+
+% cat /proc/meminfo
+
+        total:    used:    free:  shared: buffers:  cached:
+Mem:  1052483584 1047261184  5222400 160591872 137572352 515420160
+Swap: 2097405952        0 2097405952
+MemTotal:      1027816 kB
+MemFree:          5100 kB
+MemShared:      156828 kB
+Buffers:        134348 kB
+Cached:         503340 kB
+SwapCached:          0 kB
+Active:         100124 kB
+Inact_dirty:    621276 kB
+Inact_clean:     73116 kB
+Inact_target:   262144 kB
+HighTotal:      131072 kB
+HighFree:         2036 kB
+LowTotal:       896744 kB
+LowFree:          3064 kB
+SwapTotal:     2048248 kB
+SwapFree:      2048248 kB
+BigPagesFree:        0 kB
+
+#--------------------
+# SOLARIS
+
+% prtconf
+System Configuration:  Sun Microsystems  sun4u
+Memory size: 1024 Megabytes
+System Peripherals (Software Nodes):
+
+SUNW,Ultra-60
+    packages (driver not attached)
+        terminal-emulator (driver not attached)
+        deblocker (driver not attached)
+        obp-tftp (driver not attached)
+        disk-label (driver not attached)
+        SUNW,builtin-drivers (driver not attached)
+        sun-keyboard (driver not attached)
+        ufs-file-system (driver not attached)
+    chosen (driver not attached)
+    openprom (driver not attached)
+        client-services (driver not attached)
+    options, instance #0
+    aliases (driver not attached)
+    memory (driver not attached)
+    virtual-memory (driver not attached)
+    pci, instance #0
+        ebus, instance #0
+            auxio (driver not attached)
+            power, instance #0 (driver not attached)
+            SUNW,pll (driver not attached)
+            sc (driver not attached)
+            se, instance #0
+            su, instance #0
+            su, instance #1
+            ecpp, instance #0
+            fdthree, instance #0 (driver not attached)
+            eeprom (driver not attached)
+            flashprom (driver not attached)
+        network, instance #0
+        scsi, instance #0
+            disk (driver not attached)
+            tape (driver not attached)
+            sd, instance #0
+            sd, instance #1
+            sd, instance #2 (driver not attached)
+            sd, instance #3 (driver not attached)
+            sd, instance #4 (driver not attached)
+            sd, instance #5 (driver not attached)
+            sd, instance #6
+            sd, instance #7 (driver not attached)
+            sd, instance #8 (driver not attached)
+            sd, instance #9 (driver not attached)
+            sd, instance #10 (driver not attached)
+            sd, instance #11 (driver not attached)
+            sd, instance #12 (driver not attached)
+            sd, instance #13 (driver not attached)
+            sd, instance #14 (driver not attached)
+        scsi, instance #1
+            disk (driver not attached)
+            tape (driver not attached)
+            sd, instance #15 (driver not attached)
+            sd, instance #16 (driver not attached)
+            sd, instance #17 (driver not attached)
+            sd, instance #18 (driver not attached)
+            sd, instance #19 (driver not attached)
+            sd, instance #20 (driver not attached)
+            sd, instance #21 (driver not attached)
+            sd, instance #22 (driver not attached)
+            sd, instance #23 (driver not attached)
+            sd, instance #24 (driver not attached)
+            sd, instance #25 (driver not attached)
+            sd, instance #26 (driver not attached)
+            sd, instance #27 (driver not attached)
+            sd, instance #28 (driver not attached)
+            sd, instance #29 (driver not attached)
+    pci, instance #1
+        TSI,gfxp, instance #0
+    counter-timer (driver not attached)
+    SUNW,UltraSPARC-II (driver not attached)
+    SUNW,UltraSPARC-II (driver not attached)
+    pseudo, instance #0

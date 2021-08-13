@@ -1,0 +1,13 @@
+Bob,
+
+This helps access via rsh for RH linux
+
+edit /etc/securetty add: rsh rlogin rexec save
+
+normal access list: edit /root/.rhosts and /etc/hosts.equiv to give access to netgroup or machines.
+
+everyhost access: edit /etc/pam.d/rsh change:
+	auth required /lib/security/pam_rhosts_auth.so
+to:
+	auth sufficient /lib/security/pam_rhosts_auth.so 
+

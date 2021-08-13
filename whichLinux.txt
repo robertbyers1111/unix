@@ -1,0 +1,42 @@
+
+Check any or all of these files. Some may exist, some may not.
+
+      /etc/centos-release
+      /etc/issue
+      /etc/os-release
+      /etc/redhat-release
+      /etc/system-release
+
+Also, python can tell you the platform:
+
+     $ python -mplatform
+     Linux-2.6.32-279.5.1.el6.x86_64-x86_64-with-centos-6.3-Final
+
+And gcc as well:
+
+      #-- CentOS 5.x
+
+      $ gcc --version
+      gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-54)
+      Copyright (C) 2006 Free Software Foundation, Inc.
+
+      #-- CentOS 6.x
+
+      $ gcc --version
+      gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-3)
+      Copyright (C) 2010 Free Software Foundation, Inc.
+
+      #-- Ubuntu 12.04
+
+      $ gcc --version
+      gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+      Copyright (C) 2011 Free Software Foundation, Inc.
+
+      #-- Ubuntu 14.04
+
+      $ gcc --version
+      gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+      Copyright (C) 2013 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+

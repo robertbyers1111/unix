@@ -1,0 +1,78 @@
+
+#   +-----------------+
+#---| NOTES (19Apr07) |---------------------------------------------------------
+#   +-----------------+
+
+#-- Config file on raishu
+
+  /etc/sfw/smb.conf
+
+#-- Password file may be specified in the config..
+
+  % grep "smb passwd file" /etc/sfw/smb.conf
+  smb passwd file = /var/samba/private/smbpasswd
+
+#-- some common password file locations..
+  /var/samba/private/smbpasswd
+  /etc/sfw/private
+
+% cat /var/samba/private/smbpasswd
+bbyers:1269:AC1E4C29DDF880DA1AA818381E4E281B:3B77DE71DBD1A8F2FFE82CDA2B7F4DEB:[UX         ]:LCT-43286E67:
+dallison:1350:49F6A065674C9EBCAAD3B435B51404EE:0459EEBA0AC4983747816E1E147E7669:[UX         ]:LCT-4346A0F1:
+vweygandt:1378:B90388C00407BE027584248B8D2C9F9E:44F4E784F3F2B7084D63CA8E855E718E:[UX         ]:LCT-434EB549:
+
+% smbpasswd -a jdoyle ellacoya
+Added user jdoyle.
+
+#   +---------------------+
+#---| OLD NOTES (31Oct01) |-----------------------------------------------------
+#   +---------------------+
+
+## OLD_NOTES   Samba tips:
+## OLD_NOTES   
+## OLD_NOTES   + If a PC cannot see a Samba server, make sure the PC's NetBIOS name resolves
+## OLD_NOTES     to an IP address on the server.
+## OLD_NOTES   
+## OLD_NOTES   +---------------------+
+## OLD_NOTES   | INSTALL/CONFIG TIPS |
+## OLD_NOTES   +---------------------+
+## OLD_NOTES   
+## OLD_NOTES   + Sample config (uses local smbpasswd file):
+## OLD_NOTES   
+## OLD_NOTES   
+## OLD_NOTES      [global]
+## OLD_NOTES         workgroup = ITE
+## OLD_NOTES         security = user
+## OLD_NOTES         encrypt passwords = yes
+## OLD_NOTES         smb passwd file = /var/samba/private/smbpasswd
+## OLD_NOTES         debug level = 2
+## OLD_NOTES         passwd chat debug = False
+## OLD_NOTES   
+## OLD_NOTES      [<ntUserName>]
+## OLD_NOTES         comment = <unixUser> on <thisHost>
+## OLD_NOTES         path = /export/home/<unixUser>
+## OLD_NOTES         public = no
+## OLD_NOTES         browseable = yes
+## OLD_NOTES         read only = no
+## OLD_NOTES         writeable = yes
+## OLD_NOTES         create mode = 0750
+## OLD_NOTES   
+## OLD_NOTES   + Creating smbpasswd users:
+## OLD_NOTES   
+## OLD_NOTES     smbpasswd -a <ntUserName> <password>
+## OLD_NOTES   
+## OLD_NOTES   + (---OBSOLETE---) MY KLUDGE FOR DIFF NT/UNIX USERNAMES (---OBSOLETE---)
+## OLD_NOTES   
+## OLD_NOTES     The above config sample uses the NT username as the samba "service" name. When NT
+## OLD_NOTES     browses a Samba server, it connects as the NT username, and samba authenticates
+## OLD_NOTES     using that name as the 'service'.
+## OLD_NOTES   
+## OLD_NOTES     In addition to the above sample, another step to make this all work is to have
+## OLD_NOTES     TWO users in /etc/passwd with the SAME UID (!). For example, if NT username
+## OLD_NOTES     is 'ntbbyers' and unix username is 'bob', then do this:
+## OLD_NOTES   
+## OLD_NOTES   	useradd ntbbyers
+## OLD_NOTES   	vi /etc/passwd (change ntbbyers' uid to be same as bob's, also same home directory)
+## OLD_NOTES   	passwd ntbbyers (use ntbbyers' NT password)
+## OLD_NOTES   	smbpasswd ntbbyers (use ntbbyers' NT password)
+## OLD_NOTES   

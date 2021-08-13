@@ -1,0 +1,9 @@
+
+NOTE: the ARP table in IPv6 is called Neighbor Table.
+
+   ip neighbor show dev eth3
+
+NOTE: Ping command in IPv6 is 'ping6'
+
+  ping6 3fff:c0a8::c0a8:d074
+

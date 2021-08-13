@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0104)http://www.google.com/search?q=cache:freebsd.simplenet.com/Bash-prompts.txt+ps1+reverse+video+bash&hl=en -->
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<META content="MSHTML 5.50.4611.1300" name=GENERATOR></HEAD>
+<BODY>
+<TABLE width="100%" border=1>
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE cellSpacing=0 cellPadding=10 width="100%" bgColor=#ffffff border=1 
+      color="#ffffff">
+        <TBODY>
+        <TR>
+          <TD><FONT face=arial,sans-serif color=black size=-1>This is <B><FONT 
+            color=#0039b6>G</FONT><FONT color=#c41200>o</FONT><FONT 
+            color=#f3c518>o</FONT><FONT color=#0039b6>g</FONT><FONT 
+            color=#30a72f>l</FONT><FONT color=#c41200>e</FONT></B>'s <A 
+            href="http://www.google.com/intl/en_extra/help/features.html#cached">cache</A> 
+            of <A href="http://freebsd.simplenet.com/Bash-prompts.txt"><FONT 
+            color=blue>http://freebsd.simplenet.com/Bash-prompts.txt</FONT></A>.<BR><B><FONT 
+            color=#0039b6>G</FONT><FONT color=#c41200>o</FONT><FONT 
+            color=#f3c518>o</FONT><FONT color=#0039b6>g</FONT><FONT 
+            color=#30a72f>l</FONT><FONT color=#c41200>e</FONT></B>'s cache is 
+            the snapshot that we took of the page as we crawled the web.<BR>The 
+            page may have changed since that time. Click here for the <A 
+            href="http://freebsd.simplenet.com/Bash-prompts.txt"><FONT 
+            color=blue>current page</FONT></A> without 
+            highlighting.</FONT><BR><BR>
+            <CENTER><FONT color=black size=-2><I>Google is not affiliated with 
+            the authors of this page nor responsible for its 
+            content.</I></FONT></CENTER></TD></TR>
+        <TR>
+          <TD>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD><FONT face=arial,sans-serif color=black size=-1>These 
+                  search terms have been highlighted:&nbsp;</FONT></TD>
+                <TD bgColor=#ffff66><B><FONT face=arial,sans-serif color=black 
+                  size=-1>ps1&nbsp;</FONT></B></TD>
+                <TD bgColor=#a0ffff><B><FONT face=arial,sans-serif color=black 
+                  size=-1>reverse&nbsp;</FONT></B></TD>
+                <TD bgColor=#99ff99><B><FONT face=arial,sans-serif color=black 
+                  size=-1>video&nbsp;</FONT></B></TD>
+                <TD bgColor=#ff9999><B><FONT face=arial,sans-serif color=black 
+                  size=-1>bash&nbsp;</FONT></B></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<HR>
+<PRE>---------------------- Begin Copyrighted Material -------------------
+$Revision: 1.6 $
+$Date: 2000/06/02 20:33:00 $
+
+	This article is Copyright 1998-2000 by Douglas Barton. All
+non-commercial uses of this article are granted explicitly; providing
+that my name, this copyright notice, and all material between and
+including the lines that say "Begin Copyrighted Material" and "End of
+Copyrighted Material" are reproduced intact. All commercial uses of
+this article are explicitly reserved, and must be arranged with the
+author. 
+
+	I hope that does not sound extreme, but writing documentation
+is one of the things I do for a living, and after putting as many hours 
+into something as I have this article, I feel that protecting my 
+interests is well within reason. :) Please feel free to send any
+comments, suggestions, corrections or questions to Doug@gorean.org.
+
+	I made reference to the "termcap" file that comes with the
+FreeBSD distribution, the xterm source code, and the "ctlseqs.ms," both
+from XFree86 3.3.2.3. Of course I also used the <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> man pages. 
+
+	The information in this article is specific to <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> version
+2.x. Although the general information about xterm and ANSI escape
+sequences is probably applicable to other shells, I have not tested it,
+and have no intention of doing so. Those using <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> 1.14.x can
+accomplish most of the things mentioned here by using the octal
+equivalents of the various escape sequences (e.g., substituting \033
+for \e, \007 for \a, etc.) and deleting the \[ and \] characters that
+indicate the boundaries of the non-printable portions of the prompt to
+<B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> 2. This was tested briefly, but I give no guarantees that what you
+want to do with <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> 1.14 will work.
+
+	If you need help with the basics of creating a prompt string,
+please see the PROMPTING section of the <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> man page.
+
+	By including escape sequences in your prompt you can affect
+various aspects of the terminal you are using; be that an xterm,
+console device, or other terminal emulation. For example, xterm has
+the following built in escape sequences (from misc.c in the xterm 
+source):
+
+        0: /* new icon name and title*/
+        1: /* new icon name only */
+        2: /* new title only */
+
+Here is a simple example of a prompt using those attributes.
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e]1;My Desk\a\e]2;${PWD}\a\]\
+[\u@ME \w]\n \#\$ '
+
+To make things easier to read, I used a \ at the end of the first line
+(which is interpreted by the shell as literally escaping the Return at
+the end of that line) to continue the string onto the next line. You
+can use all the examples in this article as they are here, or you can
+join the lines. Make sure to delete the \ if you join them. Here is
+how to interpret the elements of that line. 
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>=	set the shell variable <B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B> equal to the string between the two
+	' marks. Since this variable is only used by <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B>, there is no
+	need to export it. 
+\[	start a sequence of non-printing characters
+\e	an ASCII escape character (033 octal)
+]1;	xterm escape sequence for the name of the icon
+	(works for window managers like AfterStep)
+My Desk	literal text string
+\a	an ASCII bell character (007 octal)
+	This ends the first xterm sequence.
+
+\e]2;${PWD}\a
+Put the present working directory in the xterm titlebar. I like to use
+${PWD} here because \w puts ~ in the title when you use just 'cd' to
+return to your home. 
+
+\]	ends the non-printing character sequence
+
+[\u@ME \w]
+[	literal [ character
+\u	the username of the current user
+@ME	literal characters
+\w	the current working directory
+]	literal ] character
+\n	newline
+\#	the command number of this command
+\$	if the effective UID is 0, a #, otherwise a $
+
+Here are some examples of what the prompt looks like using the above
+string.
+
+While I am in my home directory:
+[myusername@ME ~]
+ 22$ 
+
+Another directory:
+[myusername@ME /usr/ports/shells/bash2]
+ 23$ 
+
+	Now assume you would like to add color to your prompt. The
+following will make your prompt a lovely shade of blue, with the
+caveat that not all ANSI sequences display exactly the same on
+all terminals. 
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e]1;My Desk\a\e]2;${PWD}\a\
+\e[0;34m\]\
+[\u@ME \w]\n \#\$ \
+\[\e[m\]'
+
+The astute reader will notice that there are two changes to the
+previous string. Before the first \] which indicates the end of the
+non-printing sequence, the ANSI escape code for the color blue was 
+added. 
+
+\e[	ANSI escape sequence indicator
+0;	use the default attribute (i.e., no bold, underline, etc.)
+34	use blue for the foreground color
+m	end of ANSI escape indicator
+
+At the end of the prompt we have included another set of non-printable
+characters with the ANSI escape sequence for "cancel all attributes."
+This will prevent the text you type in at the prompt from being
+colored, or otherwise affected.
+
+	Two very popular uses of color are to indicate that the user
+has become root, and to use different colors for prompts on different
+hosts. Because I log into machines on a lot of different hosts, I have
+developed the following prompt system which allows me to simply change
+the two variables below for each host. 
+
+PROMPT_HOSTNAME='ME'
+PROMPT_COLOR='0;34m'
+
+# If I am root, set the prompt to bright red
+if [ ${UID} -eq 0 ]; then
+PROMPT_COLOR='1;31m'
+fi
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e]1;${PROMPT_HOSTNAME}\a\e]2;${PROMPT_HOSTNAME}:${PWD}\a\
+\e[${PROMPT_COLOR}\]\
+[\u@${PROMPT_HOSTNAME} \w]\n \#\$ \
+\[\e[m\]'
+
+	There are other ANSI attributes that can be added, such as
+bold, inverse (or <B style="COLOR: black; BACKGROUND-COLOR: #a0ffff">reverse</B>) <B style="COLOR: black; BACKGROUND-COLOR: #99ff99">video</B>, blink and underline. Not all
+attributes are supported on all terminals however. For example, the
+blink attribute is not available on xterm. Underline is generally not
+available on cons25. A little experimentation with your terminal type
+will show you what you need to do to achieve the effect you want. 
+
+	A chart with the most common escape sequences of interest; and
+which ones are supported on xterm, cons25 and vt100 terminals is
+appended to the end of this article. If your system uses terminfo
+instead of termcap, your escape codes may be different. 
+
+	Let us say that you would like the hostname part of the prompt
+to be in <B style="COLOR: black; BACKGROUND-COLOR: #a0ffff">reverse </B><B style="COLOR: black; BACKGROUND-COLOR: #99ff99">video</B> so that it stands out more than the rest. 
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e[0;34m\]\
+[\u@\e[7mME\e[27m \w]\n \#\$ \
+\[\e[m\]'
+
+The \e[7m sequence is the code for <B style="COLOR: black; BACKGROUND-COLOR: #a0ffff">reverse </B><B style="COLOR: black; BACKGROUND-COLOR: #99ff99">video</B>. On an xterm you can
+use the sequence \e[27m to cancel the <B style="COLOR: black; BACKGROUND-COLOR: #a0ffff">reverse</B> attribute. On other
+terminals you would either have to use \e[m to cancel all attributes
+(which works fine if you are not using color) or use the same color
+sequence you used previously to restore only the color attribute. 
+
+	If you have the same .bash_profile/.bashrc on a machine that
+you log into from different terminal types, you may find the following
+to be of use. This allows you to customize your prompt according to
+what attributes are supported based on the various types of terminals
+you use. This is based on my experience, you will probably need to
+modify it to serve your needs. 
+
+PROMPT_HOSTNAME='ME'
+PROMPT_COLOR='0;34m'
+
+# If I am root, set the prompt to bright red
+if [ ${UID} -eq 0 ]; then
+PROMPT_COLOR='1;31m'
+fi
+
+case ${TERM} in
+        xterm*)
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e]1;${PROMPT_HOSTNAME}\a\e]2;${PROMPT_HOSTNAME}:${PWD}\a\
+\e[${PROMPT_COLOR}\][\u@${PROMPT_HOSTNAME} \w]\n \#\$ \[\e[m\]'
+        ;;
+        vt100)
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='[\u@${PROMPT_HOSTNAME} \w]\n \#\$ '
+        ;;
+        *)
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='\[\e[${PROMPT_COLOR}\][\u@${PROMPT_HOSTNAME} \w]\n \#\$ \[\e[m\]'
+        ;;
+esac
+
+
+	Below is a chart of various interesting attributes for
+prompting purposes. The first column is a description of the attribute.
+The second column is the termcap code for that attribute. For more
+information check 'man 5 termcap'. If the escape code listed does not
+work for your terminal, check the termcap file for your machine. Those
+using the terminfo system should check that file and the documentation
+for it to find the information they need. 
+
+	The last three columns contain the codes for the various
+terminals, if they are supported. Below this chart is a very long and
+rather obnoxious prompt string that gives examples of these attributes,
+and should allow you to test your terminal to see what it can support. 
+It also has the various color codes so you can use it as a reference 
+as well. The bold attribute when combined with a color has the effect
+of "brightening" the color displayed. On some terminals this makes it
+an entirely different color. 
+
+	When creating an escape sequence, you can combine the various
+elements. For example, if you want a string that is bold, underlined,
+with a red foreground and a green background you would use:
+
+\e[1;4;31;42m
+
+	To read this chart, keep in mind that an ANSI escape sequence
+starts with \e[ and ends with a literal m. Thus from the chart, the
+code to turn on the bold attribute is \e[1m. The \e[m sequence turns
+off all ANSI attributes, and is the only way to cancel things like bold
+and underline on most terminals. Obviously, "NO" means that terminal
+does not support that attribute. The ^G for bell is the traditional
+"hold down the Control key and press G" combination. It can of course
+be represented in a <B style="COLOR: black; BACKGROUND-COLOR: #ff9999">Bash</B> 2 prompt string with \a. On most terminals, 
+"inverse" and "standout" are identical. Most terminals display
+unsupported attributes as bold.
+
+Attribute     termcap	xterm	cons25	vt100
+---------------------------------------------
+bold on		md	1	1	1
+bold off		22	[m	
+
+inverse on	mr	7	7	7
+inverse off		27	[m
+
+standout on	so	7	7	7
+standout off	se	27	[m	[m
+
+underline on	us	4	NO	4
+underline off	ue	24		[m
+
+blink on	mb	NO	5	5
+blink off		25	[m	[m
+
+blank/invis	mk	8
+
+bell		bl	^G	^G	^G
+
+all attr off	me	[m	[m	[m
+
+
+	Here is a sample prompt with the list of color codes included.
+Where more than one color is indicated it means that color displays
+differently on different terminal types. Other colors may be similarly
+affected. 
+
+<B style="COLOR: black; BACKGROUND-COLOR: #ffff66">PS1</B>='[\u@TEST \w]\n \#\$ \n\
+\[\
+\e[1mBold Text\e[m\n\
+\e[4mUnderline Text\e[m\n\
+\e[5mBlink Text\e[m\n\
+\e[7mInverse Text\e[m\]\n\
+Should be normal text
+Foreground colors:
+\[\
+\e[0;30m30: Black\n\
+\e[0;31m31: Red\n\
+\e[0;32m32: Green\n\
+\e[0;33m33: Yellow\Orange\n\
+\e[0;34m34: Blue\n\
+\e[0;35m35: Magenta\n\
+\e[0;36m36: Cyan\n\
+\e[0;37m37: Light Gray\Black\n\
+\e[0;39m39: Default\n\
+Bright foreground colors:
+\e[1;30m30: Dark Gray\n\
+\e[1;31m31: Red\n\
+\e[1;32m32: Green\n\
+\e[1;33m33: Yellow\n\
+\e[1;34m34: Blue\n\
+\e[1;35m35: Magenta\n\
+\e[1;36m36: Cyan\n\
+\e[1;37m37: White\n\
+\e[0;39m39: Default\n\
+\e[m\]Background colors:
+\[\e[1;37m\e[40m40: Black\e[0;49m\n\
+\e[41m41: Red\e[0;49m\n\
+\e[42m42: Green\e[0;49m\n\
+\e[43m43: Yellow\Orange\e[0;49m\n\
+\e[44m44: Blue\e[0;49m\n\
+\e[45m45: Magenta\e[0;49m\n\
+\e[46m46: Cyan\e[0;49m\n\
+\e[47m47: Light Gray\Black\e[0;49m\n\
+\e[49m49: Default\e[m\]\n'
+
+	While I know that nothing in this article is going to cure
+cancer, I hope that it does bring some small joy to your life, and
+that you have as much fun using this information as I did bringing
+it all together.
+
+-------------------- End of Copyrighted Material -----------------------
+
+	An excellent web page with resources for other shells can
+be found at: http://sunsite.unc.edu/LDP/HOWTO/mini/Xterm-Title.html
+</PRE></BODY></HTML>

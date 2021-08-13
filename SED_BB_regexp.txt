@@ -1,0 +1,6 @@
+
+
+(A) To specify a number of occurences, use \{m\} ...
+
+	echo abcde 19:32 | sed 's/.\{8\}:/X:/'
+

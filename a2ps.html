@@ -1,0 +1,45 @@
+
+#-- My current favorite for printing code:
+  a2ps --sides=tumble -rc -f6.5
+
+#-- Interview Questions (portrait)
+  a2ps -1 --sides=tumble --portrait -f8.5 InterviewQuestions.txt
+
+#-- Landscape, 2-Up:
+  a2ps -r
+
+#-- Landscape, 1-Up ('-1' *MUST* appear before '--landscape' !!! )
+  a2ps -1 --sides=tumble --landscape -f9.0
+
+#-- Portrait, Truncate Long Lines, 1-Up, 8-Pt Font
+  a2ps -Rc1 -f8.0
+
+#-- Force 121 Chars Per Line:
+  a2ps -r -l121
+
+#-- Landscape, 8-pt Font:
+  a2ps -r -f8.0
+
+#   +-------------------+
+#---| PERSONAL SETTINGS |---
+#   +-------------------+
+
+% cat ~/.a2ps/a2psrc
+Options: --medium=Letter --sides=tumble -rc -f6.5
+
+#   +------------------------+
+#---| 'A4' PAPER IS DEFAULT! |---
+#   +------------------------+
+
+  By default, the setting is for A4. Update the file /usr/local/etc/a2ps-site.cfg,
+  replacing 'A4' with 'Letter'
+
+#   +-----------+
+#---| HOME PAGE |---
+#   +-----------+
+
+  #-- HOME PAGE:
+  http://www.infres.enst.fr/~demaille/a2ps/
+
+  #-- ON LINE DOCUMENTATION:
+  http://www.infres.enst.fr/~demaille/a2ps/doc-4.12/a2ps_toc.html

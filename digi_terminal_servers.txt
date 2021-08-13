@@ -1,0 +1,11 @@
+
+EXAMPLE: to connect to session 6 on digi term server 10.1.252.193
+
+	telnet 10.1.252.193 2006
+
+EXAMPLE: to clear session 6 on digi term server 10.1.252.193
+
+	telnet 10.1.252.193
+	login: root/ellacoya (factory defaults: root/dbps)
+	kill 6
+

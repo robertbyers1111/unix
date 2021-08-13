@@ -1,0 +1,23 @@
+To send a pattern:
+
+	On receiver:
+	% ttcp -s -r
+
+	On sender:
+	% ttcp -s -t host
+
+To send a file:
+
+	On receiver:
+	% ttcp -r
+
+	On sender:
+	% ttcp -t host < file
+
+On NT/W2K:
+
+	On receiver:
+	C:\> .\ttcp -r
+
+	On sender:
+	C:\> .\ttcp -t -n 1024 10.1.254.15

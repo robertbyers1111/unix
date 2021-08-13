@@ -1,0 +1,14 @@
+#   +---------+
+#---| Solaris |---
+#   +---------+
+
+egrep (in /bin) SUCKS. man pages imply [:space:] is for whitespace but I found it doesn't match TABs (!)
+
+   Instead, use..
+
+	pcregrep
+
+   EXAMPLE, find whitespace (including TABs):
+
+	pcregrep '\s' myfile.txt
+

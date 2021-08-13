@@ -1,0 +1,39 @@
+[Need to clean this up. It was from askubuntu on stackexchange]
+
+You've a lot unused kernels. Remove all but the last kernels with:
+
+sudo apt-get purge linux-image-{3.0.0-12,2.6.3{1-21,2-25,8-{1[012],8}}}
+
+This is shorthand for:
+
+sudo apt-get purge linux-image-3.0.0-12 linux-image-2.6.31-21 linux-image-2.6.32-25 linux-image-2.6.38-10 linux-image-2.6.38-11 linux-image-2.6.38-12 linux-image-2.6.38-8
+
+Removing the linux-image-x.x.x-x package will also remove
+linux-image-x.x.x-x-generic.
+
+The headers are installed into /usr/src and are used when building
+out-tree kernel modules (like the proprietary nvidia driver and
+virtualbox). Most users should remove these header packages if the
+matching kernel package (linux-image-*) is not installed.
+
+To list all installed kernels, run:
+
+dpkg -l linux-image-\* | grep ^ii
+
+One command to show all kernels and headers that can be removed,
+excluding the current running kernel:
+
+kernelver=$(uname -r | sed -r 's/-[a-z]+//')
+dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve $kernelver
+
+It selects all packages named starting with linux-headers-<some number>
+or linux-image-<some number>, prints the package names for installed
+packages and then excludes the current loaded/running kernel (not
+necessarily the latest kernel!). This fits in the recommendation of
+testing a newer kernel before removing older, known-to-work kernels.
+
+So, after upgrading kernels and rebooting to test it, you can remove all
+other kernels with:
+
+sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
+

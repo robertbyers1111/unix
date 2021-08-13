@@ -1,0 +1,20 @@
+
+#-- BASIC
+
+    dig +noall +answer -tA host
+
+#-- Alternate server
+
+    dig @SERVER +noall +answer -tA host
+
+#-- Reverse lookup
+
+    dig +noall +answer -tA -x IPAddr
+
+#-- Checking return code (dig doesn't consider unknown host to be an error)
+
+    if ! dig +noall +answer -tA omg.wtf.com | grep -q .
+    then
+      echo unknown host: $DIGHOST
+    fi
+

@@ -1,0 +1,255 @@
+#   +-------------+
+#---| INTERESTING |---
+#   +-------------+
+
+http://www.humans-enabled.com/2012/06/how-to-use-xargs-to-grep-or-rm-million.html
+
+ How To Use xargs To grep (or rm) a Million Files
+
+Sometimes even when a tidbit of technology one is studying is
+already very well documented, one still seeks to test it out for
+oneself to get a solid sense of the true behaviour of the subject.
+Plus, if you're like me, writing about a particular subject has
+the added benefit of committing it to memory.
+
+And so it is for the reason of teaching myself that I document
+these already well-known points about grep and xargs.
+
+Of course, as a side-effect, if another out there ends up learning
+from my writings too, that would be perfectly fabulous in my eyes
+as well.
+
+Basically, the question in my mind is this: How do I successfully
+grep(search) for something in a directory that contains hundreds
+of thousands, or perhaps more individual files?
+
+To illustrate an example: Using the grep command by itself to
+search through hundreds of thousands of files provides the
+following result on my Ubuntu 12.04 GNU/Linux system. The below
+directory contains 200,000 files.
+
+$ grep 'rubies' *
+bash: /bin/grep: Argument list too long
+
+
+So why would I receive the error "Argument list too long" for this
+example? The key is to take a look at the number of characters for
+an argument that I am dealing with when using grep * in a
+directory with a large number of files(as in the example above ).
+Take a look at this example, which counts and displays the number
+of characters in the arguments for echo.
+
+$ echo *|wc -c
+2288895
+
+
+The above command uses echo to enumerate all the names of the
+files in the current directory with the wildcard "*". The results
+are then piped to the word counting(wc) program, showing number of
+characters via (-c).
+
+So as you can see, when applying "*" to a command, it's not really
+the number of files retrieved as arguments that's the problem, but
+the length of all the names of the files globbed together in the
+directory when all being processed as an argument to a command
+with the "*" wildcard.
+
+If the number of characters you retrieve with the command above is
+greater than the pre-set "ARG_MAX" value on your system, that's
+when you will get the "Argument list too long" error with a
+command being used to process a great number of files.
+
+Here's one example of how to find the ARG_MAX value:
+
+$ getconf ARG_MAX
+2097152
+
+
+Obviously, if the number of characters submitted to my grep
+command is greater than the number shown for the ARG_MAX setting,
+I will not be able to process a command that uses * with that size
+of argument.
+
+So, the answer to deal with this argument list problem, is to use
+GNU xargs from the Free Software Foundation.
+
+Here's an excerpt from the xargs man page:
+
+NAME
+
+ xargs - build and execute command lines from standard input
+
+DESCRIPTION
+
+ This manual page documents the GNU version of xargs.  xargs reads items from the
+ standard input, delimited by blanks (which can be protected with double or  sin‐
+ gle  quotes  or  a  backslash) or newlines, and executes the command (default is
+ /bin/echo) one or more times with any initial-arguments followed by  items  read
+ from standard input.  Blank lines on the standard input are ignored.
+
+ Because  Unix  filenames can contain blanks and newlines, this default behaviour
+ is often problematic; filenames containing blanks and/or newlines are incorrect‐
+ ly  processed  by xargs.  In these situations it is better to use the -0 option,
+ which prevents such problems.   When using this option you will need  to  ensure
+ that  the  program which produces the input for xargs also uses a null character
+ as a separator.  If that program is GNU find for  example,  the  -print0  option
+ does this for you.
+
+(For the complete manual, please see http://www.gnu.org/software/findutils/ )
+
+In this writeup, I want to focus on details of the second
+paragraph. Specifically, I wanted to document some tests that show
+why you should use the find command with the -print0 setting along
+with the xargs -0 setting together to overcome problems like
+spaces in filenames, and to overcome the "Argument list too long"
+error.
+
+Anyways, here's how you can see how things respond, and which way
+is the wrong way vs. the right. DISCLAIMER: These tests are
+experimental only, and I cannot responsible for any damage you
+cause to your machine while testing these commands for yourself.
+So make a backup of your important data and use caution when
+entering the commands.
+
+Let's start by making 200,000 files (a task that took my computer
+about 8.3 seconds). Then we'll cd into the new directory.
+
+mkdir dirWith200KFiles
+
+cd dirWith200KFiles
+
+
+
+Now, create 200,000 files (named file-1 thru file-200000), and
+echo some text into them (with just a few taps of your fingers).
+Note: this same process will work for a million or more files,
+e.g., just replace {1..200000} with {1..1000000}.
+
+for eachfile in {1..200000}
+do
+    echo "yes there is something here" > file-$eachfile
+done
+
+
+
+Now, let's hide a gem in one of the files so we can search for it
+with grep later.
+
+echo "rubies diamonds and gold" >> file-78432
+
+
+
+And, let's add a file with spaces in the name so we can break some
+commands with that too.
+
+echo "spaces in filename" > "myfile spaces inname"
+
+
+
+At this point we can conduct a search with grep, and experience
+what might happen when one is trying to find a gem in such a large
+set of files and in a file with spaces in the name.
+
+$ grep 'rubies' *
+bash: /bin/grep: Argument list too long
+
+
+
+So, in the above example, grep fails because of "Argument list too
+long". To resolve the problem, see the CORRECT example below.
+
+A CORRECT way to use xargs with grep:
+
+$ find . -type f -print0 | xargs -0 grep 'rubies'
+./file-78432:rubies diamonds and gold
+
+
+
+In the above example, the find command checks the current
+directory for files of type and formats the output, replacing
+blank spaces in names with the null character, which then gets
+piped to the xargs command. The xargs command accepts the output
+from the find command, while ensuring no blank spaces with the -0
+(format of -print0 command required), and greps the results for
+'rubies'. As you can see in the output, this is how it's supposed
+to work.
+
+Here are a few variations with explanations that show how these
+are the WRONG way to use the grep and xargs commands.
+
+$ find . -type f | xargs -0 grep 'rubies'
+xargs: argument line too long
+
+
+
+In the above example, when the find command encounters our
+filename with 3 spaces in it, they are piped into the xargs
+command as 3 arguments at once, which causes an error because our
+xargs command only expects 1 argument.
+
+$ find . -type f -print0 | xargs grep 'rubies'
+xargs: Warning: a NUL character occurred in the input.
+It cannot be passed through in the argument list.
+Did you mean to use the --null option?
+xargs: argument line too long
+
+
+
+In the above example, the output format of the find command sends
+the null characters in place of the spaces in the filename, but
+the xargs command doesn't expect them, so it causes an error.
+
+And finally, the most chaotic example that has the potential to
+cause problems. Especially if using xargs to do something more
+destructive than grep, e.g. rm (remove) files:
+
+$ find . -type f | xargs grep 'rubies'
+grep: ./myfile: No such file or directory
+grep: spaces: No such file or directory
+grep: inname: No such file or directory
+./file-78432:rubies diamonds and gold
+
+
+
+In the above example, the output from the find command is
+processed by "xargs grep" as separate arguments and so separate
+filenames in this case. The xargs grep command then also succeeds
+in finding the correct result, but at this point the damage could
+already be done.
+
+Here are some of the same tests using the command "rm" instead:
+
+CORRECT:
+
+$ find . -type f -print0 | xargs -0 rm
+
+
+
+WRONG (In my case of deleting 200K files anyway):
+
+$ rm *
+bash: /bin/rm: Argument list too long
+
+
+
+WRONG:
+
+$ find . -type f | xargs rm
+rm: cannot remove `./myfile': No such file or directory
+rm: cannot remove `spaces': No such file or directory
+rm: cannot remove `inname': No such file or directory
+
+
+
+So there it is. Problem solved. I'm definitely not saying this is
+the only way to do it. But now you can get your searching for text
+in large sets of files on like never before.
+
+Credit to the site below for showing more information on ARG_MAX
+http://www.in-ulm.de/~mascheck/various/argmax/
+
+
+
+Shannon VanWagner
+06/19/12
+

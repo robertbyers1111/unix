@@ -1,0 +1,10 @@
+HOST: 192.168.124.57 packetjet/packetjet
+
+ssh packetjet@192.168.124.57
+
+% tcpprep -c192.168.0.0/16 --pcap=junk.pcap --cachefile=junk.cache
+% tcprewrite --enet-dmac=00:02:7e:53:8c:54 --cachefile=junk.cache -i junk.pcap -o junk.remap.pcap
+% tshark -Vn -r junk.remap.pcap |grep Ethern |sort -u
+Ethernet II, Src: 00:02:7e:53:8c:54 (00:02:7e:53:8c:54), Dst: 00:11:43:47:92:b4 (00:11:43:47:92:b4)
+Ethernet II, Src: 00:11:43:47:92:b4 (00:11:43:47:92:b4), Dst: 00:02:7e:53:8c:54 (00:02:7e:53:8c:54)
+

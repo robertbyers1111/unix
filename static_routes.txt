@@ -1,0 +1,10 @@
+
+ o Static Routes on LINUX (redhat):
+	route add -host 1.1.3.3 gw 10.1.253.69
+
+   or, to use a specific interface:
+	route add -host 1.1.12.2 gw 10.1.253.42 dev eth2
+
+
+ o Static Routes on Solaris:
+	route add -host 1.1.12.2 10.1.253.42

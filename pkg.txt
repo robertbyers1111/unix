@@ -1,0 +1,75 @@
+
+#   +-------------------------------------+
+#---| Installing CSW (community software) |---
+#   +-------------------------------------+
+
+	pkgutil (newer)
+	pkg-get (older)
+
+#   +------+
+#---| Misc |---
+#   +------+
+
+pkginfo -l PKGname
+
+pkgchk PKGname
+	(is silent if all is OK)
+
+pkgchk -l -d PKGfile | grep Pathname
+	(tells which files exist inside a pkg file)
+
+pkgchk -l PKGname
+	(tells which files ought to be installed - based on /var/sadm/install/contents)
+
+/var/sadm/install/contents
+	(contains file listings for all installed packages)
+
+#   +----------------------------------------------------+
+#---| Extract all files from a pkg file into a directory |---
+#   +----------------------------------------------------+
+
+	pkgtrans pkgFile destDir
+
+#   +------------------------------+
+#---| IF THE PKG IS IN A DIRECTORY |---
+#   +------------------------------+
+
+IF THE PKG IS IN A DIRECTORY (ie, not a single file)
+
+The directory MUST be located under /var/spool/pkg
+Package name is taken from the directory name
+
+Example:
+
+% cd /var/spool/pkg
+% gzip -dc curlssl.tar.gz | tar xvf -
+% ls -lFL
+total 2
+drwxr-xr-x   4 root     other        512 Jan 14  2003 curlssl/
+
+% ls -lFL
+total 32
+drwxr-xr-x   2 root     other        512 Jan 14  2003 install/
+-rw-r--r--   1 root     other        202 Jan 14  2003 pkginfo
+-rw-r--r--   1 root     other      12471 Jan 14  2003 pkgmap
+drwxr-xr-x   8 root     other        512 Jan 14  2003 reloc/
+
+% pkgadd curlssl
+
+% pkginfo -l curlssl
+   PKGINST:  curlssl
+      NAME:  curl - gets a URL - with ssl
+  CATEGORY:  application
+      ARCH:  SPARC
+   VERSION:  7.10.3
+   BASEDIR:  /opt
+    VENDOR:  Daniel Stenberg
+    PSTAMP:  14Jan2003
+  INSTDATE:  Aug 05 2003 14:34
+     EMAIL:  packager: <jean.robertson@mcgill.ca>
+    STATUS:  completely installed
+     FILES:      158 installed pathnames
+                  17 directories
+                   4 executables
+                5004 blocks used (approx)
+

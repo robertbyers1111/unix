@@ -1,0 +1,3 @@
+To allow root logins:
+
+vi /etc/default/logins, comment-out the "CONSOLE=" line

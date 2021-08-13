@@ -1,0 +1,91 @@
+#   +------------------------+
+#---| To list physical disks |---
+#   +------------------------+
+
+  % fdisk -l
+
+  EXAMPLE:
+
+  % fdisk -l
+
+  Disk /dev/sda: 146.1 GB, 146163105792 bytes
+  255 heads, 63 sectors/track, 17769 cylinders
+  Units = cylinders of 16065 * 512 = 8225280 bytes
+
+     Device Boot      Start         End      Blocks   Id  System
+  /dev/sda1   *           1          13      104391   83  Linux
+  /dev/sda2              14       17769   142625070   8e  Linux LVM
+
+  Disk /dev/sdb: 299.4 GB, 299439751168 bytes
+  255 heads, 63 sectors/track, 36404 cylinders
+  Units = cylinders of 16065 * 512 = 8225280 bytes
+
+  Disk /dev/sdb doesn't contain a valid partition table
+
+  Disk /dev/sdc: 299.4 GB, 299439751168 bytes
+  255 heads, 63 sectors/track, 36404 cylinders
+  Units = cylinders of 16065 * 512 = 8225280 bytes
+
+  Disk /dev/sdc doesn't contain a valid partition table
+
+#   +---------------------------------+
+#---| To add a new disk to qavirtual3 |-----------------------------------------
+#   +---------------------------------+
+
+After configuring the drive via the boot up (PERC) utility, if the drives don't
+contain valid partition tables, follow this procedure:
+
+#-- First, update /etc/fstab, adding the following line:
+
+/dev/sdb1               /home_300G_a    ext3    defaults        1 1
+
+#-- Then create a new partition:
+
+  % fdisk /dev/sdb
+Command (m for help): p
+
+Disk /dev/sdb: 299.4 GB, 299439751168 bytes
+255 heads, 63 sectors/track, 36404 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): n
+Command action
+   e   extended
+   p   primary partition (1-4)
+p
+Partition number (1-4): 1
+First cylinder (1-36404, default 1):
+Using default value 1
+Last cylinder or +size or +sizeM or +sizeK (1-36404, default 36404):
+Using default value 36404
+
+Command (m for help): t
+Selected partition 1
+Hex code (type L to list codes): 8e
+Changed system type of partition 1 to 8e (Linux LVM)
+
+Command (m for help): p
+
+Disk /dev/sdb: 299.4 GB, 299439751168 bytes
+255 heads, 63 sectors/track, 36404 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1       36404   292415098+  8e  Linux LVM
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+#-- Next, create a new filesystem on the partition..
+
+  % mkfs.ext3 /dev/sdb1
+
+#-- Finally, mount it..
+
+  % mount -a
+

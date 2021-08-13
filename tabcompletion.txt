@@ -1,0 +1,39 @@
+
+NOTE: To display completion config, use the 'complete' command
+NOTE: To display functions, use the 'declare -p' command (also 'declare -F')
+
+--------------------------------------------------------------------
+
+To get wildcard expansion, use Ctrl-X * at the end of the command with '*' appearing in the middle
+
+EXAMPLE: directory has 'moo.dat'
+
+        TYPE: ls m*t<C-X>*
+        Shell responds with replacement: ls moo.dat
+
+--------------------------------------------------------------------
+
+This alias failed filename tab completion (but not directory tab completion)
+
+     alias gv="gvim -geom=999x999"
+
+Root cause has to do with the following that show up in my shell..
+
+   % declare -p|grep "\bgv\b"
+   [gv]="!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))"
+
+   % complete |grep -i " gv$"
+   complete -F _filedir_xspec gv
+
+..I found this definition is coming from.
+
+    % grep -E "\bgv\b" /usr/share/bash-completion/bash_completion 
+   _install_xspec '!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))' gv ggv kghostview
+
+Workaround is to add *BOTH* of these to .bashrc..
+
+    compopt -o bashdefault gv
+    complete -F _filedir_xspec gv
+
+--------------------------------------------------------------------
+

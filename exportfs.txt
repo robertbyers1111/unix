@@ -1,0 +1,77 @@
+
+	+------------------------+
+	| To export a filesystem |
+	+------------------------+
+
+
+[A] ON SERVER:
+
++ vi /etc/dfs/dfstab, adding a line like one of these:
+
+  share -F nfs -o ro -d "some description" /export/home/users
+  share -o rw,root=slefire.ite.ellacoya.com /export/home/sol9/local
+
+
++ run this command:
+
+  exportfs -a
+
+
+[B] ON CLIENT:
+
++ (for this example, I'm assuming hostname of the server is "obtuse")
+
++ make a mount point as follows:
+
+  mkdir /export/home/obtuseUsers
+  touch /export/home/obtuseUsers/NOT_MOUNTED
+
+  (note: the mount point can be named anything and can be located anywhere
+   on your local disk - the above is just and example. Also, the later
+   command is not required, it simply lets you easily see whether a mount
+   point is mounted or not)
+
++ vi /etc/vfstab, adding a line like this:
+
+  obtuse:/export/home/users - /export/home/obtuseUsers nfs - yes -
+
++ mountall
+
+
+--------------------------------------------------------------------------------
+NOTE: Above instructions are valid for Solaris. Linux may or may not be the same
+
+--------------------------------------------------------------------------------
+Also, heed this information:
+
+SUMMARY: NFS mount fails with "RPC: Program not registered" under Solaris 2.3
+
+To: sun-managers@ra.mcs.anl.gov
+Subject: SUMMARY: NFS mount fails with "RPC: Program not registered" under Solaris 2.3
+From: Mitch Patenaude <mrp%hilbert@ra.mcs.anl.gov>
+Date: Fri, 19 Jan 96 13:36:55 -0800
+Followup-To: junk
+Reply-To: mrp@northcoast.com
+Sender: sun-managers-relay@ra.mcs.anl.gov
+
+My question dealt with the trouble I was having getting filesystems to mount 
+via NFS. Attempts to mount failed with "RPC: Program not registered".
+
+The problem was that nfsd and mountd weren't running.  If turns out that if 
+there are no shared entries in /etc/dfs/dfstab, then those daemons aren't 
+started at boot time.  The solution I chose was to put the share command in 
+/etc/dfs/dfstab, and then execute
+
+      /etc/init.d/nfs.server start
+
+Also, I could have issued the commands manually:
+
+/usr/lib/nfs/nfsd -a 16
+/usr/lib/nfs/mountd
+
+This must all be done as root, naturally.
+
+Thanks to all those who responded.
+
+  -- Mitch Patenaude
+     mrp@northcoast.com

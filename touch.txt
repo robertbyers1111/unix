@@ -1,0 +1,19 @@
+
+    touch -t yymmddhhmm file
+
+      or..
+
+    touch -t yymmddhhmm.ss file
+
+       -a     change only the access time
+
+       -m     change only the modification time
+
+       -h, --no-dereference
+              affect the link, not the file to which it points
+
+       -r, --reference=FILE
+              use this file's time as the timestamp
+
+vi /home/rbyers/public_html/unix/touch.txt
+

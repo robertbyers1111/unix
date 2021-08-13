@@ -1,0 +1,18 @@
+
+* '+' is NOT a valid SED operator
+
+* '\t\ is NOT a valid escape
+
+* For whitespace, use [SPACE,TAB][SPACE,TAB]*. For example,
+
+	[ 	][ 	]*
+
+* For positional editing, be sure to account for ALL fields from the input !!! Otherwise, trailing data becomes part of your match :(
+
+	echo "abc def xyz" | sed 's/\(.*\)\([ 	][ 	]*\)/\1/'
+
+	Returns the unintended result ..
+
+		abc xyz
+
+	(because the xyz wasn't accounted for in the positional expression)

@@ -1,0 +1,65 @@
+#   +---------------------+
+#---| Zones on Solaris 10 |---
+#   +---------------------+
+
+zoneadm list
+zoneadm list -v
+
+#   +----------------+
+#---| Creating zones |---
+#   +----------------+
+
+[create zone path => i.e., create directory (e.g., /export/home/zones) give 700 permissions]
+
+zonecfg -z <name>
+ > create
+ > set zonepath=/<path>
+ > set autoboot=true
+ > add net
+   > set address=<x.x.x.x>
+   > set phusical=<if.> (e.g., nge0)
+   > end
+ > verify
+ > commit
+ > ^d
+
+zoneadm -z <name> install
+zoneadm -z <name> boot
+
+zlogin -C -e\@ <name> [@. to leave]
+
+vi /etc/default/login
+	(comment out CONSOLE=/dev/console to allow root login)
+
+
+vi /etc/passwd
+	(set shell for root to /usr/bin/bash)
+
+vi /etc/ssh/sshd_config
+	(set PermitRootLogin=yes)
+	(kill sshd process, should automatically restart)
+
+create .bash_profile in root directory
+	add PS1="[\u@\h \d \t]\\$ "
+
+#   +---------------------------------------+
+#---| Configuring NTP (only in global zone) |---
+#   +---------------------------------------+
+
+create /etc/inet/ntp.conf
+	# sets up reference to NTP Pool Servers
+	driftfile /etc/inet/ntp.drift
+
+	server 0.pool.ntp.org
+	server 1.pool.ntp.org
+	server 2.pool.ntp.org
+	server pool.ntp.org
+
+svcadm enable network/ntp
+	(starts xntp daemon)
+
+ntpq -p
+	(checks status)
+
+NTP will automatically restart on reboot
+

@@ -1,0 +1,264 @@
+
+#   +---------------------------------------+
+#---| From https://wiki.debian.org/Aptitude |---
+#   +---------------------------------------+
+
+Note that with the new multi-arch packages, you'll get packages for other
+architectures listed in this result. For example, I get:
+
+aptitude -F "%p" search "?not(?installed)"  | grep "^bash:"
+bash:i386
+
+I have the bash package installed, but it's the amd64 version, since my OS is
+installed with the amd64 version of Ubuntu Precise. If you don't want to see
+these packages for other architectures, you can exclude lines containing ::
+
+aptitude -F "%p" search "?not(?installed)"  | grep -v ':'
+
+Interactive Use
+
+To run interactively, enter the following from a terminal:
+
+aptitude
+
+After running it, use:
+
+    F10 to access the menu and use aptitude. This is the main key.
+    ? for help
+    The 'up', 'down', 'left', 'right' keys to navigate.
+    The 'Enter' key to select
+    The '+' or '-' key to install/update or remove a package
+    The 'g' key to preview/confirm actions
+    'q' to quit – this also closes the currently open window (‘g’ goes forward, ‘q’ goes back) 
+
+The common use of aptitude in TUI (text user interface) is; run aptitude;
+press 'u' (update the lists of available packages); press 'U' (Mark all
+upgradable packages to be upgraded); (search/select some stuff to install, is
+optional); press 'g' (to see the pending actions and modify if needed); press
+'g' (again, to start the download).
+
+Some time when you need to resolve conflicts, you discover that you made a
+mistake; you can easily use 'Cancel pending actions' in the 'Actions' menu so
+that you can re-select.
+
+When reviewing pending actions:
+
+    'a' explicitly accepts an action (use again to unaccept)
+    'r' rejects an action
+    'g' again goes ahead with pending actions 
+
+See Accessing package information for understanding the letters in the package
+synopsis line (e.g., 'i' means "will be installed", 'p' means "not installed",
+etc.)
+
+#   +--------------------+
+#---| Manual use as root |---
+#   +--------------------+
+
+You can also use aptitude in the same manner as apt-get:
+
+Update the packages list :
+
+     aptitude update
+
+Upgrade the packages :
+
+     aptitude safe-upgrade
+
+Install foo :
+
+     aptitude install foo
+
+Remove bar :
+
+     aptitude remove bar
+
+Purge foo :
+
+     aptitude purge foo
+
+#   +--------------------------+
+#---| Functions for every user |---
+#   +--------------------------+
+
+Search for packaging containing foo :
+
+     aptitude search foo
+
+Personally, I still use apt-cache search foo to perform a search – aptitude
+search foo is slower. But you should try the aptitude search foo way. You
+should discover that the output is a bit different from apt-cache, in some
+cases, it may be useful to search for a package to see if it is already
+installed.
+
+showing if a specific package is installed :
+
+     aptitude show foo
+
+#   +----------------------------------+
+#---| How to upgrade your distribution |---
+#   +----------------------------------+
+
+Upgrading from one stable release to the next (e.g. Lenny to Squeeze) is done
+by following the release notes for your architecture. For most people with 32
+bit systems that means the Release Notes for Intel x86. For most with 64 bit
+systems that means the Release Notes for AMD64.
+
+Using full-upgrade in the regular course of events is no longer the
+recommended practice (unless you are running sid, in which case you should not
+need to be reading this.)
+
+Minor release upgrades (e.g. from lenny 5.0.1 to 5.0.2) and security updates
+are done with safe-upgrade.
+
+Find out the current version of Debian that you are running: 
+
+     cat /etc/debian_version
+
+Example for upgrading from, e.g., etch 4.0r1 to 4.0r2 ...etc., or applying
+security upgrades:
+
+     aptitude update
+     aptitude safe-upgrade
+
+#   +---------------------+
+#---| apt-get to aptitude |---
+#   +---------------------+
+
+Action
+
+    apt-get command
+    aptitude command
+
+Install foo
+
+    apt-get install foo
+    aptitude install foo
+
+Install foo.deb
+
+    apt install ./foo.deb
+
+Search foo
+
+    apt-cache search foo
+    aptitude search foo
+
+Remove foo
+
+    apt-get remove foo
+    aptitude remove foo
+
+List reverse dependencies
+
+    apt-cache rdepends foo
+    aptitude search ~Dfoo
+
+Print information on priorities for foo
+
+    apt-cache policy foo
+    aptitude versions foo
+
+Download foo's sources and build a binary .deb package
+
+    apt-get source --compile foo
+    ?
+
+#   +--------------------------+
+#---| Advanced search patterns |---
+#   +--------------------------+
+
+Looking for packages installed from anything else than stable:
+
+    aptitude search '?narrow(?installed, !?archive(stable))'
+
+Looking for packages installed from testing (assuming you have sources lists
+with stable and testing repositories):
+
+    aptitude search '?narrow(?installed, ?archive(testing) !?archive(stable))'
+
+#   +---------------------+
+#---| Find available apps |---
+#   +---------------------+
+
+grep-dctrl and its derivatives provide a great way to query the apt cache
+files. (You can install these tools on ubuntu with sudo apt-get install
+dctrl-tools )
+
+In the case of available (but not necessarily installed) packages, you can use
+grep-available. For example, to list all available packages:
+
+    grep-available -s Package .
+
+aptitude can show you a list of Not Installed Packages by just launching it.
+
+You can also get a list of not installed packages with aptitude by using:
+
+        aptitude -F "%p" search "?not(?installed)"
+
+#   +------------------------+
+#---| List what is installed |---
+#   +------------------------+
+
+    Several ways..
+
+    dpkg -l
+
+    apt list --installed
+
+    aptitude search "?installed"
+
+    grep status.installed /var/log/dpkg.log
+
+#   +-----------------------+
+#---| Update package list.. |---
+#   +-----------------------+
+
+     apt-get update
+     aptitude update
+
+#   +-----------------------------------+
+#---| Get latest versions of everything |---
+#   +-----------------------------------+
+
+    apt-get upgrade
+    aptitude upgrade
+
+#   +-------------------------------------+
+#---| Show list of all files in a package |---
+#   +-------------------------------------+
+
+    apt content pkg
+
+#   +-------+
+#---| Other |---
+#   +-------+
+
+    aptitude show pkg
+
+#   +---------+
+#---| dpkg -l |---
+#   +---------+
+
+Col 1 (desired)
+  U Unknown
+  I Install
+  R Remove
+  P Purge
+  H Hold
+
+Col 2 (status)
+  n Not installed
+  i installed
+  c conf-files
+  u unpacked
+  f half-conf
+  h half-inst
+  w trig-wait
+  t trig-pend
+
+Col 3 (err?)
+  R reinstall required
+
+(Status,Err: uppercase=bad)
+

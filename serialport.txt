@@ -1,0 +1,18 @@
+#-- SOLARIS:
+
+	tip -9600 /dev/cua/b
+
+	(~. to break out)
+
+#-- ALIAS:
+
+	tip cuab
+
+#-- NOTE: Alias works only if 'cuab' appears in /etc/remote. Example:
+
+	cuab:dv=/dev/cua/b:br#9600
+
+#-- On Ultra 5:
+  o 25-pin port to left of video port is port A
+  o 9-pin labelled 'B' is port B
+  o 25-pin port to right of 'B', labelled '//' is PARALLEL port

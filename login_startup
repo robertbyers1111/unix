@@ -1,0 +1,264 @@
+
+*------------------------------------------------------------------
+*-- #!/bin/sh (FROM CRONTAB)
+
+  IN: /tmp/x
+    HOME=/builds
+    LOGNAME=ellacoya
+    PATH=/usr/bin:
+    SHELL=/usr/bin/sh
+    TZ=US/Eastern
+  out: /tmp/x
+
+*------------------------------------------------------------------
+*-- LOGIN (tcsh)
+
+  IN: /etc/.cshrc
+    GROUP=ellacoya
+    HOME=/builds
+    HOST=walrus
+    HOSTTYPE=sun4
+    HZ=100
+    LOGNAME=ellacoya
+    MACHTYPE=sparc
+    MAIL=/var/mail/ellacoya
+    OSTYPE=solaris
+    PATH=/usr/bin:
+    PWD=/builds
+    REMOTEHOST=localhost
+    SHELL=/bin/tcsh
+    SHLVL=1
+    TERM=xterm
+    TZ=US/Eastern
+    USER=ellacoya
+    VENDOR=sun
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  out: /etc/.cshrc
+
+  IN: /etc/.login
+  Sun Microsystems Inc.   SunOS 5.7       Generic October 1998
+  out: /etc/.login
+
+  #-- NOTE: SOURCES USER'S .cshrc ONLY IF USER'S .tcshrc NOT EXIST
+  IN: user's .cshrc
+  LEAVE: user's .cshrc
+
+  IN: user's .tcshrc
+  out: user's .tcshrc
+
+  IN: user's .login
+  out: user's .login
+
+*------------------------------------------------------------------
+*-- LOGIN (csh)
+
+  IN: /etc/.login
+    HOME=/builds
+    HZ=100
+    LOGNAME=ellacoya
+    MAIL=/var/mail/ellacoya
+    PATH=/usr/bin:
+    PWD=/builds
+    SHELL=/bin/csh
+    TERM=xterm
+    TZ=US/Eastern
+    USER=ellacoya
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+    Sun Microsystems Inc.   SunOS 5.7       Generic October 1998
+    You have new mail.
+  out: /etc/.login
+
+  IN: user's .cshrc
+    HOME=/builds
+    HZ=100
+    LOGNAME=ellacoya
+    MAIL=/var/mail/ellacoya
+    PATH=/usr/bin:
+    PWD=/builds
+    SHELL=/bin/csh
+    TERM=xterm
+    TZ=US/Eastern
+    USER=ellacoya
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  out: user's .cshrc
+
+  IN: user's .login
+  out: user's .login
+
+*------------------------------------------------------------------
+*-- #!/bin/csh (CALLED FROM CRONTAB)
+
+  IN: user's .cshrc
+    HOME=/builds
+    LOGNAME=ellacoya
+    PATH=/usr/bin:
+    PWD=/opt/builds
+    SHELL=/usr/bin/sh
+    TZ=US/Eastern
+    USER=ellacoya
+  out: user's .cshrc
+
+*------------------------------------------------------------------
+*-- #!/bin/csh (CALLED FROM LOGIN SESSION)
+
+  IN: user's .cshrc
+    CVSROOT=:pserver:bbyers@cvshome.eng.ellacoya.com:/export/home/swa_cvs
+    EDITOR=vi
+    EEL_LIB=/builds/cvs/ite2/eel/lib
+    GROUP=ellacoya
+    HOME=/builds
+    HOST=walrus
+    HOSTTYPE=sun4
+    HZ=100
+    IXIA_HOME=/builds
+    JAVA_HOME=/usr/local/j2sdk1_3_1_04
+    LD_LIBRARY_PATH=/usr/lib:/usr/share/lib:/usr/X/lib:/usr/openwin/lib:/usr/dt/lib:/usr/local/lib
+    LESS=-C -e -g -M -Q -s
+    LOGNAME=ellacoya
+    MACHTYPE=sparc
+    MAIL=/var/mail/ellacoya
+    MANPATH=/usr/share/man:/usr/local/man:/usr/openwin/man:/usr/dt/man:/usr/local/samba/man
+    OSTYPE=solaris
+    PAGER=/usr/local/bin/less
+    PATH=.:/bin:/usr/bin:/usr/sbin:/usr/ucb:/usr/local/bin:/usr/openwin/bin:/usr/dt/bin:/usr/ccs/bin:/usr/lib
+    PWD=/opt/builds
+    REMOTEHOST=localhost
+    SHELL=/bin/tcsh
+    SHLVL=1
+    TERM=xterm
+    TZ=US/Eastern
+    USER=ellacoya
+    VENDOR=sun
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  out: user's .cshrc
+
+*------------------------------------------------------------------
+*-- LOGIN (sh)
+
+  IN: /etc/profile
+    Sun Microsystems Inc.   SunOS 5.7       Generic October 1998
+    You have new mail.
+    HOME=/builds
+    HZ=100
+    LOGNAME=ellacoya
+    MAIL=/var/mail/ellacoya
+    PATH=/usr/bin:
+    SHELL=/bin/sh
+    TERM=xterm
+    TZ=US/Eastern
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  OUT: /etc/profile
+
+  IN: user's .profile
+  out: user's .profile
+
+*------------------------------------------------------------------
+*-- #!/bin/sh (FROM LOGIN SESSION)
+
+  IN: /tmp/x
+    HOME=/builds
+    HOSTNAME=walrus
+    HOSTTYPE=sparc
+    HZ=100
+    LOGNAME=ellacoya
+    MACHTYPE=sparc-sun-solaris2.7
+    MAIL=/var/mail/ellacoya
+    OSTYPE=solaris2.7
+    PATH=/usr/bin:
+    PWD=/opt/builds
+    SHELL=/bin/bash
+    SHLVL=1
+    TERM=xterm
+    TZ=US/Eastern
+    _=/tmp/x
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  out: /tmp/x
+
+*------------------------------------------------------------------
+*-- LOGIN (bash)
+
+  IN: /etc/profile
+    HOME=/builds
+    HOSTNAME=walrus
+    HOSTTYPE=sparc
+    HZ=100
+    LOGNAME=ellacoya
+    MACHTYPE=sparc-sun-solaris2.7
+    MAIL=/var/mail/ellacoya
+    OSTYPE=solaris2.7
+    PATH=/usr/bin:
+    PWD=/opt/builds
+    SHELL=/bin/bash
+    SHLVL=1
+    TERM=xterm
+    TZ=US/Eastern
+    _=/bin/env
+    _INIT_PREV_LEVEL=S
+    _INIT_RUN_LEVEL=3
+    _INIT_RUN_NPREV=0
+    _INIT_UTS_ISA=sparc
+    _INIT_UTS_MACHINE=sun4u
+    _INIT_UTS_NODENAME=walrus
+    _INIT_UTS_PLATFORM=SUNW,Ultra-5_10
+    _INIT_UTS_RELEASE=5.7
+    _INIT_UTS_SYSNAME=SunOS
+    _INIT_UTS_VERSION=Generic_106541-16
+  OUT: /etc/profile
+
+  IN: user's .bash_profile
+  out: user's .bash_profile
+

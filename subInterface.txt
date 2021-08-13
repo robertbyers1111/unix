@@ -1,0 +1,14 @@
+If you want to add a secondary IP address:
+
+	ifconfig plumb hme0:1
+	ifconfig hme0:1 xxx.xxx.xxx.xxx netmask yyy.yyy.yyy.yyy
+	ifconfig hme0:1 up
+	route add <whatever>
+
+To add more aliases, just do a :2, :3, etc.
+
+To make aliases active at boot, create the appropriate
+/etc/hostname.hme0:x files, along with IP addresses/hostnames in /etc/hosts,
+
+Then you can do "ifconfig hme0:x up" in /etc/rc2.d/S99local
+(or wherever you want).

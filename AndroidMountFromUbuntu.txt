@@ -1,0 +1,19 @@
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To mount an Android device from Ubuntu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On android, install "Software Data Cable" (by DAMI APP, has 10M+ downloads)
+
+Open SDC and navigate to the "Computer" tab (tab names at bottom of screen)
+
+Don't bother connecting via QR Scan (https://www.damiapp.com/ is unresponsive as of this writing)
+
+Instead, connect to the IP and port number listed in the middle of the screen.
+
+    Example: ftp://10.0.0.14:8888/
+
+On Ubuntu, install curlftpfs and enter a command similar to..
+
+    curlftpfs 10.0.0.14:8888/ /home/rmbjr60/MrKitesS8-mount
+
