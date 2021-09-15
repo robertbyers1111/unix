@@ -1,0 +1,16 @@
+
+#   +-------------------------------------+
+#---| Using 'declare' with bash functions |---
+#   +-------------------------------------+
+
+[1] list existing function names and contents..
+
+    declare -f [funcname]
+
+[2] list existing function names only..
+
+    declare -F [funcname]
+
+[3] destroy a function..
+
+    unset -f funcname
